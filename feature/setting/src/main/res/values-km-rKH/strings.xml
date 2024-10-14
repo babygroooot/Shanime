@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_setting_setting">ការកំណត់</string>
+    <string name="feature_setting_font_size">ទំហំអក្សរ</string>
+    <string name="feature_setting_app_desc">បង្កើតឡើងដោយ BabyGroot</string>
+    <string name="feature_setting_version">កំណែ</string>
+    <string name="feature_setting_language">ភាសា</string>
+    <string name="feature_setting_term_and_condition">លក្ខណ្ឌប្រើប្រាស់</string>
+    <string name="feature_setting_about_us">អំពីយើង</string>
+    <string name="feature_setting_english">អង់គ្លេស</string>
+    <string name="feature_setting_khmer">ខ្មែរ</string>
+    <string name="feature_setting_preview">អក្សរគម្រូ</string>
+    <string name="feature_setting_normal">ធម្មតា</string>
+    <string name="feature_setting_medium">មធ្យម</string>
+    <string name="feature_setting_large">ធំ</string>
+    <string name="feature_setting_text_preview_1">ប្រធានបទ៖ ការសិក្សាអំពីអាកាសធាតុ</string>
+    <string name="feature_setting_text_preview_2">ចេញពី៖ ឌឿន ដានីញ៉ែល</string>
+    <string name="feature_setting_text_preview_3">អរុណសួស្តី!\nខ្ញុំគ្រាន់តែចង់ដឹងថាតើអាកាសធាតុមានអ្វីប្រែប្រួលទេនៅថ្ងៃស្អែក?\nសូមមេត្តាផ្តល់ដំណឹងអោយខ្ញុំបានដឹងនៅល្ងាចនេះផង។\n\nសូមអរគុណ!</string>
+    <string name="feature_setting_text_preview_4">គម្រូអក្សរទៅតាមទំហំនីមួយៗ</string>
+</resources>

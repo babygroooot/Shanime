@@ -1,0 +1,1 @@
+-keep class com.core.network.util.NetworkResult

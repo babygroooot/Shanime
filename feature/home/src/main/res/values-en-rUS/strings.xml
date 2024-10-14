@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_home">Home</string>
+    <string name="feature_home_see_all">See all</string>
+    <string name="feature_home_top_hit_anime">Top Hits Anime</string>
+    <string name="feature_home_top_hit_manga">Top Hits Manga</string>
+    <string name="feature_home_view_detail">View Detail</string>
+    <string name="feature_home_airing">Airing</string>
+    <string name="feature_home_finished">Finished</string>
+    <string name="feature_home_genre">"Genre: "</string>
+    <string name="feature_home_synopsis">Synopsis</string>
+    <string name="feature_home_trailer">Trailer</string>
+    <string name="feature_home_truncated_text">" …View More"</string>
+    <string name="feature_home_comment">Comment</string>
+    <string name="feature_home_publishing">Publishing</string>
+    <string name="feature_home_no_comment_decs">There is no comment at the moment.</string>
+</resources>

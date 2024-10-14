@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_setting_setting">Setting</string>
+    <string name="feature_setting_font_size">Font Size</string>
+    <string name="feature_setting_app_desc">Made with passion by BabyGroot</string>
+    <string name="feature_setting_version">Version</string>
+    <string name="feature_setting_language">Language</string>
+    <string name="feature_setting_term_and_condition">Terms and Conditions</string>
+    <string name="feature_setting_about_us">About Us</string>
+    <string name="feature_setting_english">English</string>
+    <string name="feature_setting_khmer">Khmer</string>
+    <string name="feature_setting_preview">Preview</string>
+    <string name="feature_setting_normal">Normal</string>
+    <string name="feature_setting_medium">Medium</string>
+    <string name="feature_setting_large">Large</string>
+    <string name="feature_setting_text_preview_1">Subject: Hot air balloon design</string>
+    <string name="feature_setting_text_preview_2">From: Bob the builder</string>
+    <string name="feature_setting_text_preview_3">Good morning!\nI just wanted to check if you like the design.\nPlease let me know if you want any adjustment.\n\nThanks you!</string>
+    <string name="feature_setting_text_preview_4">A preview for each text size.</string>
+</resources>

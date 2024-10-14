@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bad_request">Bad Request</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="error_not_found">404 not found</string>
+    <string name="request_not_allowed">Method request is not allowed</string>
+    <string name="server_error">Internal Server Error: The request was rejected cause of endpoint is wrong format</string>
+    <string name="bad_gateway">Bad Gateway</string>
+    <string name="something_went_wrong">Something went wrong</string>
+</resources>

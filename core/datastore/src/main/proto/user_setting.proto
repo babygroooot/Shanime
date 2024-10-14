@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "com.core.datastore";
+
+message UserSetting {
+    string theme = 1;
+    string fontSize = 2;
+    string language = 3;
+}

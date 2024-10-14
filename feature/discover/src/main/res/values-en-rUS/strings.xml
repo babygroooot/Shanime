@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_discover_discover">Discover</string>
+    <string name="feature_discover_comment">Comment</string>
+    <string name="feature_discover_airing">Airing</string>
+    <string name="feature_discover_finished">Finished</string>
+    <string name="feature_discover_genre">"Genre: "</string>
+    <string name="feature_discover_synopsis">Synopsis</string>
+    <string name="feature_discover_trailer">Trailer</string>
+    <string name="feature_discover_truncated_text">" …View More"</string>
+    <string name="feature_discover_no_comment_decs">There is no comment at the moment.</string>
+</resources>

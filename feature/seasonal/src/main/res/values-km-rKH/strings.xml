@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_seasonal_seasonal">រដូវកាល</string>
+    <string name="feature_seasonal_upcoming">រដូវកាលខាងមុខ</string>
+    <string name="feature_seasonal_this_season">រដូវកាលនេះ</string>
+    <string name="feature_seasonal_comment">មតិយោបល់</string>
+    <string name="feature_seasonal_airing">កំពុងចាក់ផ្សាយ</string>
+    <string name="feature_seasonal_finished">បានបញ្ចប់ការចាក់ផ្សាយ</string>
+    <string name="feature_seasonal_genre">"ប្រភេទ: "</string>
+    <string name="feature_seasonal_synopsis">សង្ខេប</string>
+    <string name="feature_seasonal_trailer">ឈុតគម្រូ</string>
+    <string name="feature_seasonal_truncated_text">" …បង្ហាញបន្ថែម"</string>
+    <string name="feature_seasonal_no_comment_decs">មិនទាន់មានការបញ្ចេញមតិ</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_home">ទំព័រដើម</string>
+    <string name="feature_home_see_all">មើលទាំងអស់</string>
+    <string name="feature_home_top_hit_anime">Animeកំពុងល្បី</string>
+    <string name="feature_home_top_hit_manga">Mangaកំពុងល្បី</string>
+    <string name="feature_home_view_detail">មើលលម្អិត</string>
+    <string name="feature_home_airing">កំពុងចាក់ផ្សាយ</string>
+    <string name="feature_home_finished">បានបញ្ចប់ការចាក់ផ្សាយ</string>
+    <string name="feature_home_genre">"ប្រភេទ: "</string>
+    <string name="feature_home_synopsis">សង្ខេប</string>
+    <string name="feature_home_trailer">ឈុតគម្រូ</string>
+    <string name="feature_home_truncated_text">" …បង្ហាញបន្ថែម"</string>
+    <string name="feature_home_comment">មតិយោបល់</string>
+    <string name="feature_home_publishing">កំពុងបោះផ្សាយ</string>
+    <string name="feature_home_no_comment_decs">មិនទាន់មានការបញ្ចេញមតិ</string>
+</resources>

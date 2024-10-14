@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_seasonal_seasonal">Seasonal</string>
+    <string name="feature_seasonal_upcoming">Upcoming</string>
+    <string name="feature_seasonal_this_season">This Season</string>
+    <string name="feature_seasonal_comment">Comment</string>
+    <string name="feature_seasonal_airing">Airing</string>
+    <string name="feature_seasonal_finished">Finished</string>
+    <string name="feature_seasonal_genre">"Genre: "</string>
+    <string name="feature_seasonal_synopsis">Synopsis</string>
+    <string name="feature_seasonal_trailer">Trailer</string>
+    <string name="feature_seasonal_truncated_text">" …View More"</string>
+    <string name="feature_seasonal_no_comment_decs">There is no comment at the moment.</string>
+</resources>

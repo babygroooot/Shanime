@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_discover_discover">ស្វែងរក</string>
+    <string name="feature_discover_comment">មតិយោបល់</string>
+    <string name="feature_discover_airing">កំពុងចាក់ផ្សាយ</string>
+    <string name="feature_discover_finished">បានបញ្ចប់ការចាក់ផ្សាយ</string>
+    <string name="feature_discover_genre">"ប្រភេទ: "</string>
+    <string name="feature_discover_synopsis">សង្ខេប</string>
+    <string name="feature_discover_trailer">ឈុតគម្រូ</string>
+    <string name="feature_discover_truncated_text">" …បង្ហាញបន្ថែម"</string>
+    <string name="feature_discover_no_comment_decs">មិនទាន់មានការបញ្ចេញមតិ</string>
+</resources>
