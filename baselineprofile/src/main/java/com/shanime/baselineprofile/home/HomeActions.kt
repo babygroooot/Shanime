@@ -1,5 +1,7 @@
 package com.shanime.baselineprofile.home
 
+import android.os.Handler
+import android.os.Looper
 import androidx.benchmark.macro.MacrobenchmarkScope
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
@@ -9,11 +11,22 @@ import com.shanime.baselineprofile.waitAndFindObject
 import org.junit.Assert.fail
 
 fun MacrobenchmarkScope.waitForHomeContent() {
-    val homeLazyColumn = device.waitAndFindObject(
-        selector = By.res("home_lazy_column"),
-        timeoutMillis = 30_000,
-    )
-    homeLazyColumn.wait(untilHasChildren(), 5_000)
+    device.wait(Until.gone(By.res("home_skeleton")), 30_000)
+    if (device.findObject(By.res("retry_button")) == null) {
+        val homeLazyColumn = device.waitAndFindObject(
+            selector = By.res("home_lazy_column"),
+            timeoutMillis = 30_000,
+        )
+        homeLazyColumn.wait(untilHasChildren(), 5_000)
+    } else {
+        device.findObject(By.res("retry_button")).click()
+        device.wait(Until.hasObject(By.res("home_lazy_column")), 30_000)
+        val homeLazyColumn = device.waitAndFindObject(
+            selector = By.res("home_lazy_column"),
+            timeoutMillis = 30_000,
+        )
+        homeLazyColumn.wait(untilHasChildren(), 5_000)
+    }
 }
 
 fun MacrobenchmarkScope.viewBannerDetailAndNavigateBack() {
@@ -59,11 +72,15 @@ fun MacrobenchmarkScope.viewMangaDetailAndNavigateBack() {
     val topMangaLazyColumn = device.findObject(
         By.res("top_hit_manga_lazy_column"),
     )
+    device.wait(Until.hasObject(By.res("top_hit_manga_item")), 5_000)
     val topHitMangaItem = topMangaLazyColumn.children.find { it.resourceName == "top_hit_manga_item" }
     if (topHitMangaItem == null) {
         fail("No top hit manga item found")
     }
     topHitMangaItem?.click()
     device.wait(Until.hasObject(By.res("manga_navigate_back_button")), 5_000)
-    device.findObject(By.res("manga_navigate_back_button")).click()
+    val handler = Handler(Looper.getMainLooper())
+    handler.postDelayed({
+        device.findObject(By.res("manga_navigate_back_button")).click()
+    }, 1_000)
 }

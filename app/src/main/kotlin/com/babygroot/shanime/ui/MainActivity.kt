@@ -14,10 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.os.LocaleListCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
@@ -28,8 +30,11 @@ import com.core.designsystem.ShanimeTheme
 import com.core.model.main.ShanimeFontSizeConfig
 import com.core.model.main.ShanimeLanguage
 import com.core.model.main.ShanimeThemeConfig
+import com.core.model.main.UserSettingModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -38,33 +43,44 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val languageHasNotBeenSet = AppCompatDelegate.getApplicationLocales().toLanguageTags().isEmpty()
         if (languageHasNotBeenSet) {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(ShanimeLanguage.ENGLISH.languageTag))
         }
+        var userSetting by mutableStateOf<UserSettingModel?>(null)
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userSetting.onEach { userSetting = it }.collect()
+            }
+        }
+        splashScreen.setKeepOnScreenCondition {
+            userSetting == null
+        }
         setContent {
-            val userSetting by viewModel.userSetting.collectAsStateWithLifecycle()
             val fontSizeConfig by remember {
                 derivedStateOf {
-                    when (userSetting.fontSizeConfig) {
+                    when (userSetting?.fontSizeConfig) {
                         ShanimeFontSizeConfig.NORMAL -> FontSizeConfig.NORMAL
                         ShanimeFontSizeConfig.MEDIUM -> FontSizeConfig.MEDIUM
                         ShanimeFontSizeConfig.LARGE -> FontSizeConfig.LARGE
+                        else -> FontSizeConfig.NORMAL
                     }
                 }
             }
             val preferredLanguage by remember {
                 derivedStateOf {
-                    when (userSetting.preferredLanguage) {
+                    when (userSetting?.preferredLanguage) {
                         ShanimeLanguage.ENGLISH -> PreferredLanguage.ENGLISH
                         ShanimeLanguage.KHMER -> PreferredLanguage.KHMER
+                        else -> PreferredLanguage.ENGLISH
                     }
                 }
             }
-            val shouldUseDarkTheme = shouldUseDarkTheme(config = userSetting.themeConfig)
-            DisposableEffect(userSetting.themeConfig) {
+            val shouldUseDarkTheme = shouldUseDarkTheme(config = userSetting?.themeConfig ?: ShanimeThemeConfig.FOLLOW_SYSTEM)
+            DisposableEffect(userSetting?.themeConfig) {
                 enableEdgeToEdge(
                     statusBarStyle = SystemBarStyle.auto(
                         lightScrim = Color.TRANSPARENT,
@@ -96,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         super.onConfigurationChanged(newConfig)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                val previouslyPreferredLanguage = viewModel.userSetting.first().preferredLanguage.languageTag
+                val previouslyPreferredLanguage = viewModel.userSetting.first()?.preferredLanguage?.languageTag
                 val currentlyPreferredLanguage = resources.configuration.locales[0].toLanguageTag()
                 if (previouslyPreferredLanguage != currentlyPreferredLanguage) {
                     /*

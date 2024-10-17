@@ -1,5 +1,7 @@
 package com.feature.discover
 
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -19,10 +21,10 @@ fun NavGraphBuilder.discoverNavGraph(
 ) {
     navigation<DiscoverGraph>(startDestination = DiscoverDestinations.Discover) {
         composable<DiscoverDestinations.Discover>(
-            enterTransition = { fadeIn(animationSpec = tween()) },
-            exitTransition = { fadeOut(animationSpec = tween()) },
-            popEnterTransition = { fadeIn(animationSpec = tween()) },
-            popExitTransition = { fadeOut(animationSpec = tween()) },
+            enterTransition = { fadeIn(tween(easing = EaseIn)) },
+            exitTransition = { fadeOut(tween(easing = EaseOut)) },
+            popEnterTransition = { fadeIn(tween(easing = EaseIn)) },
+            popExitTransition = { fadeOut(tween(easing = EaseOut)) },
         ) {
             DiscoverScreen(
                 navController = navController,
@@ -30,10 +32,10 @@ fun NavGraphBuilder.discoverNavGraph(
         }
 
         composable<DiscoverDestinations.Search>(
-            enterTransition = { fadeIn(animationSpec = tween()) },
-            exitTransition = { fadeOut(animationSpec = tween()) },
-            popEnterTransition = { fadeIn(animationSpec = tween()) },
-            popExitTransition = { fadeOut(animationSpec = tween()) },
+            enterTransition = { fadeIn(tween(easing = EaseIn)) },
+            exitTransition = { fadeOut(tween(easing = EaseOut)) },
+            popEnterTransition = { fadeIn(tween(easing = EaseIn)) },
+            popExitTransition = { fadeOut(tween(easing = EaseOut)) },
         ) {
             CompositionLocalProvider(
                 LocalNavAnimatedVisibilityScope provides this,

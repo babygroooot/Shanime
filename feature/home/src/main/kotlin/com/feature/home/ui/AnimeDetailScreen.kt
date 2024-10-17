@@ -1,7 +1,7 @@
 package com.feature.home.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.SharedTransitionScope.OverlayClip
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -36,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -120,7 +120,9 @@ fun AnimeDetailScreen(
                     animatedVisibilityScope = animatedVisibilityScope,
                     enter = fadeIn(tween(easing = EaseIn)),
                     exit = fadeOut(tween(easing = EaseOut)),
-                    resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Inside),
+                    clipInOverlayDuringTransition = OverlayClip(
+                        clipShape = RoundedCornerShape(size = 12.dp),
+                    ),
                 )
         }
         Scaffold(

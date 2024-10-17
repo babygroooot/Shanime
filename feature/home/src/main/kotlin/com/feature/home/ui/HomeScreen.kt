@@ -1,5 +1,6 @@
 package com.feature.home.ui
 
+import androidx.activity.compose.ReportDrawnWhen
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -55,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.core.designsystem.ShanimeTheme
+import com.core.designsystem.component.ErrorIndication
 import com.core.designsystem.getSharedTransitionScope
 import com.core.model.home.AnimeMetadataModel
 import com.feature.home.HomeDestinations
@@ -67,16 +69,19 @@ import java.text.DecimalFormat
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
+    onRetry: () -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
+    ReportDrawnWhen { uiState is HomeUiState.Success }
     AnimatedContent(
         targetState = uiState,
         transitionSpec = {
             fadeIn(tween(easing = EaseIn)).togetherWith(fadeOut(tween(easing = EaseOut)))
         },
         label = "Home Animated Content",
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize(),
     ) { targetState ->
         when (targetState) {
             HomeUiState.Loading -> HomeSkeleton()
@@ -139,6 +144,7 @@ fun HomeScreen(
                                         ),
                                     )
                                 },
+                                modifier = Modifier.animateItem(),
                             )
                         }
                         item {
@@ -166,11 +172,19 @@ fun HomeScreen(
                                         ),
                                     )
                                 },
+                                modifier = Modifier.animateItem(),
                             )
                         }
                     }
                 }
             }
+
+            HomeUiState.Error -> ErrorIndication(
+                errorCaption = stringResource(id = R.string.feature_home_error_desc),
+                retryText = stringResource(id = R.string.feature_home_try_again),
+                onRetry = onRetry,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }
@@ -184,6 +198,7 @@ fun HomeScreen(
     val uiState by viewModel.homeUiState.collectAsStateWithLifecycle()
     HomeScreen(
         uiState = uiState,
+        onRetry = viewModel::onRetry,
         navController = navController,
         modifier = modifier,
     )

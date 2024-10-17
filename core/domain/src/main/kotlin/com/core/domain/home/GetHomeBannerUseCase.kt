@@ -18,6 +18,9 @@ class GetHomeBannerUseCase @Inject constructor(
             networkResult.onSuccess { response ->
                 emit(Result.success(response.data.map { it.toModel() }))
             }
+            networkResult.onFailure { throwable ->
+                emit(Result.failure(exception = throwable))
+            }
         }
     }
 
@@ -28,7 +31,7 @@ class GetHomeBannerUseCase @Inject constructor(
         title = titleEnglish ?: titleJapanese.orEmpty(),
         synopsis = synopsis.orEmpty(),
         genres = genres.map { AnimeMetadataModel(malId = it.malId, type = it.type, name = it.name, url = it.url) },
-        score = score ?: 0.0f,
+        score = score.toString(),
         members = members,
         year = year ?: 0,
         rating = rating.orEmpty(),

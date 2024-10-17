@@ -34,6 +34,7 @@ baselineProfile {
 dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.profileinstaller)
+    implementation(libs.core.splashscreen)
     implementation(projects.core.designsystem)
     implementation(projects.feature.home)
     implementation(projects.feature.discover)

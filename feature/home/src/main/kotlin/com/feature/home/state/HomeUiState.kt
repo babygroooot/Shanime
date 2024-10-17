@@ -13,4 +13,6 @@ sealed interface HomeUiState {
         val topAnime: List<TopAnimeModel>,
         val topManga: List<TopMangaModel>,
     ) : HomeUiState
+
+    data object Error : HomeUiState
 }

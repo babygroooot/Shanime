@@ -7,7 +7,7 @@ data class AiringSeasonalAnimeModel(
     val title: String,
     val synopsis: String,
     val genres: List<AnimeMetadataModel>,
-    val score: Float,
+    val score: String,
     val members: Int,
     val year: Int,
     val rating: String,

@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ErrorDTO(
-    val status: Int,
+    val status: String,
     val type: String,
     val message: String,
-    val error: String,
+    val error: String?,
     @SerialName("report_url")
-    val reportUrl: String,
+    val reportUrl: String?,
 )

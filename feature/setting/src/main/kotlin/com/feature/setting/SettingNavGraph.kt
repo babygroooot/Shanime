@@ -1,5 +1,7 @@
 package com.feature.setting
 
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -15,10 +17,10 @@ fun NavGraphBuilder.settingNavGraph(
 ) {
     navigation<SettingGraph>(startDestination = SettingDestinations.Setting) {
         composable<SettingDestinations.Setting>(
-            enterTransition = { fadeIn(tween()) },
-            exitTransition = { fadeOut(tween()) },
-            popEnterTransition = { fadeIn(tween()) },
-            popExitTransition = { fadeOut(tween()) },
+            enterTransition = { fadeIn(tween(easing = EaseIn)) },
+            exitTransition = { fadeOut(tween(easing = EaseOut)) },
+            popEnterTransition = { fadeIn(tween(easing = EaseIn)) },
+            popExitTransition = { fadeOut(tween(easing = EaseOut)) },
         ) {
             SettingScreen(
                 navController = navController,

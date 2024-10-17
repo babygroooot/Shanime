@@ -187,6 +187,9 @@ fun MangaDetailScreen(
                     animatedVisibilityScope = animatedVisibilityScope,
                     enter = fadeIn(tween(easing = EaseIn)),
                     exit = fadeOut(tween(easing = EaseOut)),
+                    clipInOverlayDuringTransition = OverlayClip(
+                        clipShape = RoundedCornerShape(size = 12.dp),
+                    ),
                 ),
         ) { innerPadding ->
             LazyColumn(

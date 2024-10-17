@@ -14,4 +14,6 @@
     <string name="feature_home_comment">Comment</string>
     <string name="feature_home_publishing">Publishing</string>
     <string name="feature_home_no_comment_decs">There is no comment at the moment.</string>
+    <string name="feature_home_error_desc">Looks like something went wrong.\nPlease try again.</string>
+    <string name="feature_home_try_again">Try again</string>
 </resources>

@@ -46,7 +46,7 @@ class GetUpcomingAnimeUseCase @Inject constructor(
         title = titleEnglish ?: titleJapanese.orEmpty(),
         synopsis = synopsis.orEmpty(),
         genres = genres.map { AnimeMetadataModel(malId = it.malId, type = it.type, name = it.name, url = it.url) },
-        score = score ?: 0.0f,
+        score = if (score == null) "N/A" else score.toString(),
         members = members,
         year = year ?: 0,
         rating = rating.orEmpty(),

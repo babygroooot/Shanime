@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -121,6 +122,8 @@ fun AnimeDetailScreen(
                         onClick = {
                             navController.navigateUp()
                         },
+                        modifier = Modifier
+                            .testTag(tag = "seasonal_navigate_back_button"),
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBackIosNew,

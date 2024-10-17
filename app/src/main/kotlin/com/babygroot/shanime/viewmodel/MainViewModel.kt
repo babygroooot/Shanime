@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.core.domain.main.GetUserSettingUseCase
 import com.core.domain.main.SetPreferredLanguageUseCase
 import com.core.model.main.ShanimeLanguage
-import com.core.model.main.UserSettingModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -21,7 +20,7 @@ class MainViewModel @Inject constructor(
     val userSetting = getUserSettingUseCase().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = UserSettingModel.getDefaultInstance(),
+        initialValue = null,
     )
 
     fun setPreferredLanguage(language: ShanimeLanguage) {

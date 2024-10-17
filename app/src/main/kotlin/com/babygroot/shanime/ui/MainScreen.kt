@@ -4,6 +4,9 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -12,7 +15,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -108,21 +110,21 @@ fun MainScreen(
                     enterTransition = {
                         slideIntoContainer(
                             towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                        ) + fadeIn()
+                        ) + fadeIn(animationSpec = tween(easing = EaseIn))
                     },
                     exitTransition = {
-                        fadeOut()
+                        fadeOut(animationSpec = tween(easing = EaseOut))
                     },
                     popEnterTransition = {
-                        fadeIn()
+                        fadeIn(animationSpec = tween(easing = EaseIn))
                     },
                     popExitTransition = {
                         slideOutOfContainer(
                             towards = AnimatedContentTransitionScope.SlideDirection.End,
-                        ) + fadeOut()
+                        ) + fadeOut(animationSpec = tween(easing = EaseOut))
                     },
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .padding(innerPadding),
                 ) {
                     homeNavGraph(navController = navController)

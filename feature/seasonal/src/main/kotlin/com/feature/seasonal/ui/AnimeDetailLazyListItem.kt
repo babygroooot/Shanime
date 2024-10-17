@@ -101,8 +101,8 @@ fun AnimeBannerItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(ratio = 1.2f)
-                    .sharedElement(
-                        state = rememberSharedContentState(
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(
                             key = SeasonalSharedElementKey(
                                 id = id,
                                 content = image,
@@ -150,8 +150,8 @@ fun AnimeMiddleContentItem(
                         top = 20.dp,
                         end = 20.dp,
                     )
-                    .sharedElement(
-                        state = rememberSharedContentState(
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(
                             key = SeasonalSharedElementKey(
                                 id = id,
                                 content = title,
@@ -256,8 +256,8 @@ fun AnimeMiddleContentItem(
                 modifier = Modifier
                     .padding(horizontal = 20.dp)
                     .padding(top = 20.dp)
-                    .sharedElement(
-                        state = rememberSharedContentState(
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(
                             key = SeasonalSharedElementKey(
                                 id = id,
                                 content = genres,

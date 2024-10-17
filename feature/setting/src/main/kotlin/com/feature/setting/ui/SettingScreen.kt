@@ -10,6 +10,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +30,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForwardIos
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.rounded.Android
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.FormatSize
 import androidx.compose.material.icons.rounded.Language
@@ -60,6 +60,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -110,7 +112,8 @@ fun SettingScreen(
                                 interactionSource = null,
                                 indication = null,
                                 onClick = onSwitchTheme,
-                            ),
+                            )
+                            .testTag(tag = "theme_switcher"),
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -130,6 +133,7 @@ fun SettingScreen(
                 .padding(innerPadding),
         ) {
             Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(20.dp)
                     .fillMaxWidth()
@@ -141,7 +145,7 @@ fun SettingScreen(
                     .padding(20.dp),
             ) {
                 Column(
-                    verticalArrangement = Arrangement.SpaceBetween,
+                    verticalArrangement = Arrangement.spacedBy(space = 10.dp),
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
@@ -203,17 +207,10 @@ fun SettingScreen(
                         )
                     }
                 }
-                Icon(
-                    imageVector = Icons.Rounded.Android,
-                    tint = ShanimeTheme.colors.textPrimary,
+                Image(
+                    painter = painterResource(id = R.drawable.ic_shanime),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(90.dp)
-                        .background(
-                            color = ShanimeTheme.colors.background,
-                            shape = CircleShape,
-                        )
-                        .padding(20.dp),
+                    modifier = Modifier.size(80.dp),
                 )
             }
             SettingMenuItem(

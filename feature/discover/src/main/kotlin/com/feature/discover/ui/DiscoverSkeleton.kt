@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.ShanimeTheme
@@ -22,7 +23,8 @@ fun DiscoverSkeleton(modifier: Modifier = Modifier) {
             .wrapContentHeight(
                 align = Alignment.Top,
                 unbounded = true,
-            ),
+            )
+            .testTag(tag = "discover_skeleton"),
     ) {
         repeat(4) {
             DiscoverItemSkeleton()

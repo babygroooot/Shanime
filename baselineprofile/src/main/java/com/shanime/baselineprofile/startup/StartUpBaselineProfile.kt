@@ -1,4 +1,4 @@
-package com.shanime.baselineprofile
+package com.shanime.baselineprofile.startup
 
 import androidx.benchmark.macro.junit4.BaselineProfileRule
 import androidx.test.platform.app.InstrumentationRegistry

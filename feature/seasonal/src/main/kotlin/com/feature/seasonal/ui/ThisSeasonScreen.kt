@@ -1,6 +1,7 @@
 package com.feature.seasonal.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
@@ -36,6 +37,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -48,11 +51,13 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.core.designsystem.ShanimeTheme
+import com.core.designsystem.component.ErrorIndication
 import com.core.designsystem.getNavAnimatedVisibilityScope
 import com.core.designsystem.getSharedTransitionScope
 import com.core.designsystem.indication.ScaleIndication
 import com.core.model.home.AiringSeasonalAnimeModel
 import com.core.model.home.AnimeMetadataModel
+import com.feature.seasonal.R
 import com.feature.seasonal.SeasonalDestinations
 import com.feature.seasonal.SeasonalSharedElementKey
 import com.feature.seasonal.SeasonalSharedElementType
@@ -71,50 +76,72 @@ fun ThisSeasonScreen(
             items.loadState.source.refresh is LoadState.Loading
         }
     }
+    val isError by remember {
+        derivedStateOf {
+            items.loadState.hasError && items.itemCount == 0
+        }
+    }
     Box(
         modifier = modifier.fillMaxSize(),
     ) {
-        if (isInitialLoading) {
-            SeasonalSkeleton()
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(count = 2),
-                contentPadding = PaddingValues(20.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                items(
-                    count = items.itemCount,
-                    key = items.itemKey { it.malId },
-                ) { index ->
-                    val item = items[index]
-                    SeasonalItem(
-                        id = item?.malId ?: 0,
-                        title = item?.title.orEmpty(),
-                        image = item?.image.orEmpty(),
-                        score = (item?.score ?: 0.0).toString(),
-                        members = item?.members ?: 0,
-                        genres = item?.genres.orEmpty(),
-                        onClick = {
-                            if (item == null) return@SeasonalItem
-                            navController.navigate(
-                                route = SeasonalDestinations.AnimeDetail(
-                                    id = item.malId,
-                                    title = item.title,
-                                    image = item.image,
-                                    score = item.score.toString(),
-                                    members = item.members,
-                                    releasedYear = item.year.toString(),
-                                    isAiring = item.isAiring,
-                                    genres = item.genres.joinToString(separator = ", ") { it.name },
-                                    synopsis = item.synopsis,
-                                    trailerVideoId = item.trailerVideoId,
-                                ),
-                            )
-                        },
-                        modifier = Modifier.animateItem(),
-                    )
+        when {
+            isInitialLoading -> {
+                SeasonalSkeleton()
+            }
+
+            isError -> {
+                ErrorIndication(
+                    errorCaption = stringResource(id = R.string.feature_seasonal_error_desc),
+                    retryText = stringResource(id = R.string.feature_seasonal_try_again),
+                    onRetry = {
+                        items.retry()
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+
+            else -> {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(count = 2),
+                    contentPadding = PaddingValues(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag(tag = "this_season_lazy_column"),
+                ) {
+                    items(
+                        count = items.itemCount,
+                        key = items.itemKey { it.malId },
+                    ) { index ->
+                        val item = items[index]
+                        SeasonalItem(
+                            id = item?.malId ?: 0,
+                            title = item?.title.orEmpty(),
+                            image = item?.image.orEmpty(),
+                            score = (item?.score ?: 0.0).toString(),
+                            members = item?.members ?: 0,
+                            genres = item?.genres.orEmpty(),
+                            onClick = {
+                                if (item == null) return@SeasonalItem
+                                navController.navigate(
+                                    route = SeasonalDestinations.AnimeDetail(
+                                        id = item.malId,
+                                        title = item.title,
+                                        image = item.image,
+                                        score = item.score.toString(),
+                                        members = item.members,
+                                        releasedYear = item.year.toString(),
+                                        isAiring = item.isAiring,
+                                        genres = item.genres.joinToString(separator = ", ") { it.name },
+                                        synopsis = item.synopsis,
+                                        trailerVideoId = item.trailerVideoId,
+                                    ),
+                                )
+                            },
+                            modifier = Modifier.animateItem(),
+                        )
+                    }
                 }
             }
         }
@@ -144,7 +171,8 @@ fun SeasonalItem(
                     interactionSource = null,
                     indication = ScaleIndication,
                     onClick = onClick,
-                ),
+                )
+                .testTag(tag = "seasonal_item"),
         ) {
             Box(
                 modifier = modifier
@@ -157,8 +185,8 @@ fun SeasonalItem(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .matchParentSize()
-                        .sharedElement(
-                            state = rememberSharedContentState(
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(
                                 key = SeasonalSharedElementKey(
                                     id = id,
                                     content = image,
@@ -166,6 +194,9 @@ fun SeasonalItem(
                                 ),
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
+                            clipInOverlayDuringTransition = OverlayClip(
+                                clipShape = RoundedCornerShape(size = 12.dp),
+                            ),
                         )
                         .clip(shape = RoundedCornerShape(12.dp)),
                 )
@@ -242,8 +273,8 @@ fun SeasonalItem(
                 color = ShanimeTheme.colors.textPrimary,
                 modifier = Modifier
                     .padding(top = 10.dp)
-                    .sharedElement(
-                        state = rememberSharedContentState(
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(
                             key = SeasonalSharedElementKey(
                                 id = id,
                                 content = title,
@@ -251,6 +282,7 @@ fun SeasonalItem(
                             ),
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
+                        resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.FillHeight),
                     )
                     .skipToLookaheadSize(),
             )
@@ -262,8 +294,8 @@ fun SeasonalItem(
                 color = ShanimeTheme.colors.textPrimary,
                 modifier = Modifier
                     .padding(top = 5.dp)
-                    .sharedElement(
-                        state = rememberSharedContentState(
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(
                             key = SeasonalSharedElementKey(
                                 id = id,
                                 content = genresInString,

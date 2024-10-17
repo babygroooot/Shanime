@@ -52,6 +52,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.core.designsystem.ShanimeTheme
+import com.core.designsystem.component.ErrorIndication
 import com.core.designsystem.component.shimmerEffect
 import com.core.designsystem.indication.ScaleIndication
 import com.core.model.home.AnimeMetadataModel
@@ -108,6 +109,11 @@ fun DiscoverScreen(
                 topAnimeItems.loadState.source.refresh is LoadState.Loading
             }
         }
+        val isError by remember {
+            derivedStateOf {
+                topAnimeItems.loadState.hasError && topAnimeItems.itemCount == 0
+            }
+        }
         if (isInitialLoading) {
             DiscoverSkeleton(
                 modifier = Modifier.padding(innerPadding),
@@ -124,41 +130,54 @@ fun DiscoverScreen(
                     .padding(innerPadding)
                     .testTag(tag = "discover_lazy_column"),
             ) {
-                items(
-                    count = topAnimeItems.itemCount,
-                    key = topAnimeItems.itemKey { it.malId },
-                ) { index ->
-                    val item = topAnimeItems[index]
-                    if (item == null) {
-                        DiscoverItemSkeleton()
-                    } else {
-                        DiscoverItem(
-                            title = item.title,
-                            image = item.image,
-                            score = item.score,
-                            releasedYear = item.year,
-                            season = item.season.capitalize(Locale.current),
-                            genres = item.genres,
-                            onClick = {
-                                navController.navigate(
-                                    route = DiscoverDestinations.AnimeDetail(
-                                        id = item.malId,
-                                        title = item.title,
-                                        image = item.image,
-                                        score = item.score,
-                                        members = item.members,
-                                        releasedYear = item.year,
-                                        isAiring = item.isAiring,
-                                        genres = item.genres.joinToString(separator = ", ") { it.name },
-                                        synopsis = item.synopsis,
-                                        trailerVideoId = item.trailerVideoId,
-                                    ),
-                                )
+                if (isError) {
+                    item {
+                        ErrorIndication(
+                            errorCaption = stringResource(id = R.string.feature_discover_error_desc),
+                            retryText = stringResource(id = R.string.feature_discover_try_again),
+                            onRetry = {
+                                topAnimeItems.retry()
                             },
-                            modifier = Modifier
-                                .animateItem()
-                                .testTag(tag = "discover_item"),
+                            modifier = Modifier.fillParentMaxSize(),
                         )
+                    }
+                } else {
+                    items(
+                        count = topAnimeItems.itemCount,
+                        key = topAnimeItems.itemKey { it.malId },
+                    ) { index ->
+                        val item = topAnimeItems[index]
+                        if (item == null) {
+                            DiscoverItemSkeleton()
+                        } else {
+                            DiscoverItem(
+                                title = item.title,
+                                image = item.image,
+                                score = item.score,
+                                releasedYear = item.year,
+                                season = item.season.capitalize(Locale.current),
+                                genres = item.genres,
+                                onClick = {
+                                    navController.navigate(
+                                        route = DiscoverDestinations.AnimeDetail(
+                                            id = item.malId,
+                                            title = item.title,
+                                            image = item.image,
+                                            score = item.score,
+                                            members = item.members,
+                                            releasedYear = item.year,
+                                            isAiring = item.isAiring,
+                                            genres = item.genres.joinToString(separator = ", ") { it.name },
+                                            synopsis = item.synopsis,
+                                            trailerVideoId = item.trailerVideoId,
+                                        ),
+                                    )
+                                },
+                                modifier = Modifier
+                                    .animateItem()
+                                    .testTag(tag = "discover_item"),
+                            )
+                        }
                     }
                 }
             }

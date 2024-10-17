@@ -22,10 +22,10 @@ fun NavGraphBuilder.homeNavGraph(
 ) {
     navigation<HomeGraph>(startDestination = HomeDestinations.Home) {
         composable<HomeDestinations.Home>(
-            enterTransition = { fadeIn(tween()) },
-            exitTransition = { fadeOut(tween()) },
-            popEnterTransition = { fadeIn(tween()) },
-            popExitTransition = { fadeOut(tween()) },
+            enterTransition = { fadeIn(tween(easing = EaseIn)) },
+            exitTransition = { fadeOut(tween(easing = EaseOut)) },
+            popEnterTransition = { fadeIn(tween(easing = EaseIn)) },
+            popExitTransition = { fadeOut(tween(easing = EaseOut)) },
         ) {
             CompositionLocalProvider(
                 LocalNavAnimatedVisibilityScope provides this,

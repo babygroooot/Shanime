@@ -16,6 +16,7 @@ dependencies {
     api(libs.androidx.compose.ui.util)
     api(libs.coil.compose)
     api(libs.coil.network.okhttp)
+    implementation(libs.lottie.compose)
     testApi(libs.junit.test)
     androidTestApi(libs.androidx.test.ext)
     androidTestApi(libs.espresso.core)

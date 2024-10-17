@@ -12,6 +12,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:label="${appName}"
         android:icon="${appIcon}"
+        android:enableOnBackInvokedCallback="true"
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
         android:theme="@style/Theme.MADSkill"
@@ -19,7 +20,8 @@
         <activity
             android:name="com.babygroot.shanime.ui.MainActivity"
             android:configChanges="locale|layoutDirection|uiMode"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Shanime.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

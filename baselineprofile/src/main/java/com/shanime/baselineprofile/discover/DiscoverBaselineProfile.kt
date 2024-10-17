@@ -1,8 +1,13 @@
 package com.shanime.baselineprofile.discover
 
+import androidx.benchmark.macro.junit4.BaselineProfileRule
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Rule
+import org.junit.Test
+
 class DiscoverBaselineProfile {
 
-    /*@get:Rule
+    @get:Rule
     val rule = BaselineProfileRule()
 
     @Test
@@ -15,5 +20,5 @@ class DiscoverBaselineProfile {
             navigateToDiscoverAndWaitForContent()
             flingDiscoverItemDownUpAndNavigateToDetail()
         }
-    }*/
+    }
 }

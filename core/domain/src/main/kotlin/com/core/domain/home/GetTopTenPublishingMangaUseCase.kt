@@ -18,6 +18,9 @@ class GetTopTenPublishingMangaUseCase @Inject constructor(
             networkResult.onSuccess { response ->
                 emit(Result.success(response.data.map { it.toModel() }))
             }
+            networkResult.onFailure { throwable ->
+                emit(Result.failure(exception = throwable))
+            }
         }
     }
 

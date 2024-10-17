@@ -11,4 +11,6 @@
     <string name="feature_seasonal_trailer">Trailer</string>
     <string name="feature_seasonal_truncated_text">" …View More"</string>
     <string name="feature_seasonal_no_comment_decs">There is no comment at the moment.</string>
+    <string name="feature_seasonal_error_desc">Looks like something went wrong.\nPlease try again.</string>
+    <string name="feature_seasonal_try_again">Try again</string>
 </resources>
