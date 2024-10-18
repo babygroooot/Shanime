@@ -50,17 +50,17 @@ subprojects {
             targetExclude("**/build/**/*.xml")
         }
     }
-    afterEvaluate {
-        // For running spotless everytime the project is being built
-        val spotless = tasks.findByName("spotlessApply")
-        if (spotless != null) {
-            tasks.withType(KotlinCompile::class.java) {
-                finalizedBy(spotless)
-            }
-            tasks.withType(JavaCompile::class.java) {
-                finalizedBy(spotless)
-            }
-        }
-    }
+//    afterEvaluate {
+//        // For running spotless everytime the project is being built
+//        val spotless = tasks.findByName("spotlessApply")
+//        if (spotless != null) {
+//            tasks.withType(KotlinCompile::class.java) {
+//                finalizedBy(spotless)
+//            }
+//            tasks.withType(JavaCompile::class.java) {
+//                finalizedBy(spotless)
+//            }
+//        }
+//    }
 }
 true

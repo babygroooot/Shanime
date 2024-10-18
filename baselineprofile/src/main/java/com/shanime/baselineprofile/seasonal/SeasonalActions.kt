@@ -31,7 +31,7 @@ fun MacrobenchmarkScope.flingThisSeasonUpDownAndNavigateToDetail() {
     }
     thisSeasonItem?.click()
     device.wait(Until.hasObject(By.res("seasonal_navigate_back_button")), 5_000)
-    device.findObject(By.res("seasonal_navigate_back_button")).click()
+    device.findObject(By.res("seasonal_navigate_back_button"))?.click()
 }
 
 fun MacrobenchmarkScope.navigateToUpcomingTabAndFlingUpDown() {
@@ -54,5 +54,5 @@ fun MacrobenchmarkScope.navigateToUpcomingDetail() {
     }
     upcomingSeasonItem?.click()
     device.wait(Until.hasObject(By.res("seasonal_navigate_back_button")), 5_000)
-    device.findObject(By.res("seasonal_navigate_back_button")).click()
+    device.findObject(By.res("seasonal_navigate_back_button"))?.click()
 }

@@ -13,10 +13,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
@@ -63,44 +62,15 @@ fun MainScreen(
             currentDestination?.isTopLevelDestination() == true
         }
     }
-    Scaffold(
-        containerColor = ShanimeTheme.colors.background,
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        bottomBar = {
-            /*if (isTopLevelDestination) {
-                ShanimeBottomNavigation(
-                    destinations = bottomBarDestinations,
-                    onNavigateToDestination = { destination ->
-                        navigationToTopLevelDestination(
-                            navController = navController,
-                            topLevelDestination = destination,
-                        )
-                    },
-                    currentDestination = currentDestination,
-                )
-            }*/
-            AnimatedVisibility(
-                visible = isTopLevelDestination,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }) + expandVertically(),
-                exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }) + shrinkVertically(),
-            ) {
-                ShanimeBottomNavigation(
-                    destinations = bottomBarDestinations,
-                    onNavigateToDestination = { destination ->
-                        navigationToTopLevelDestination(
-                            navController = navController,
-                            topLevelDestination = destination,
-                        )
-                    },
-                    currentDestination = currentDestination,
-                )
-            }
-        },
+    Column(
         modifier = modifier
             .fillMaxSize()
+            .background(color = ShanimeTheme.colors.background)
             .semantics { testTagsAsResourceId = true },
-    ) { innerPadding ->
-        SharedTransitionLayout {
+    ) {
+        SharedTransitionLayout(
+            modifier = Modifier.weight(weight = 1f),
+        ) {
             CompositionLocalProvider(
                 LocalSharedTransitionScope provides this,
             ) {
@@ -124,8 +94,7 @@ fun MainScreen(
                         ) + fadeOut(animationSpec = tween(easing = EaseOut))
                     },
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                        .fillMaxSize(),
                 ) {
                     homeNavGraph(navController = navController)
                     discoverNavGraph(navController = navController)
@@ -133,6 +102,22 @@ fun MainScreen(
                     settingNavGraph(navController = navController)
                 }
             }
+        }
+        AnimatedVisibility(
+            visible = isTopLevelDestination,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }) + expandVertically(),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }) + shrinkVertically(),
+        ) {
+            ShanimeBottomNavigation(
+                destinations = bottomBarDestinations,
+                onNavigateToDestination = { destination ->
+                    navigationToTopLevelDestination(
+                        navController = navController,
+                        topLevelDestination = destination,
+                    )
+                },
+                currentDestination = currentDestination,
+            )
         }
     }
 }
