@@ -31,11 +31,19 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.babygroot.shanime.TopLevelDestination
 import com.core.designsystem.LocalSharedTransitionScope
 import com.core.designsystem.ShanimeTheme
-import com.feature.discover.discoverNavGraph
-import com.feature.home.HomeGraph
-import com.feature.home.homeNavGraph
-import com.feature.seasonal.seasonalNavGraph
-import com.feature.setting.settingNavGraph
+import com.feature.discover.navigation.discoverNavGraph
+import com.feature.discover.navigation.navigateToAnimeDetail
+import com.feature.discover.navigation.navigateToSearchAnime
+import com.feature.home.navigation.HomeGraph
+import com.feature.home.navigation.homeNavGraph
+import com.feature.home.navigation.navigateToBannerDetail
+import com.feature.home.navigation.navigateToTopAnimeDetail
+import com.feature.home.navigation.navigateToTopHitAnime
+import com.feature.home.navigation.navigateToTopMangaDetail
+import com.feature.seasonal.navigation.navigateToSeasonalAnimeDetail
+import com.feature.seasonal.navigation.seasonalNavGraph
+import com.feature.setting.navigation.navigateToFontSize
+import com.feature.setting.navigation.settingNavGraph
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -74,6 +82,11 @@ fun MainScreen(
             CompositionLocalProvider(
                 LocalSharedTransitionScope provides this,
             ) {
+                val onNavigateUp: () -> Unit = remember {
+                    {
+                        navController.navigateUp()
+                    }
+                }
                 NavHost(
                     navController = navController,
                     startDestination = HomeGraph,
@@ -96,10 +109,27 @@ fun MainScreen(
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-                    homeNavGraph(navController = navController)
-                    discoverNavGraph(navController = navController)
-                    seasonalNavGraph(navController = navController)
-                    settingNavGraph(navController = navController)
+                    homeNavGraph(
+                        onTopAnimeItemClick = navController::navigateToTopAnimeDetail,
+                        onTopMangaItemClick = navController::navigateToTopMangaDetail,
+                        onViewDetailClick = navController::navigateToBannerDetail,
+                        onViewAllTopAnimeClick = navController::navigateToTopHitAnime,
+                        onSearchAnimeClick = navController::navigateToSearchAnime,
+                        onNavigateUp = onNavigateUp,
+                    )
+                    discoverNavGraph(
+                        onSearchClick = navController::navigateToSearchAnime,
+                        onDiscoverItemClick = navController::navigateToAnimeDetail,
+                        onNavigateUp = onNavigateUp,
+                    )
+                    seasonalNavGraph(
+                        onSeasonalItemClick = navController::navigateToSeasonalAnimeDetail,
+                        onNavigateUp = onNavigateUp,
+                    )
+                    settingNavGraph(
+                        onFontSizeClick = navController::navigateToFontSize,
+                        onNavigateUp = onNavigateUp,
+                    )
                 }
             }
         }

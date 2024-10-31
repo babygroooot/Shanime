@@ -1,4 +1,4 @@
-package com.feature.discover
+package com.feature.discover.navigation
 
 import kotlinx.serialization.Serializable
 

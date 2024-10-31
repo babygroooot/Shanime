@@ -1,4 +1,4 @@
-package com.feature.home
+package com.feature.home.navigation
 
 import kotlinx.serialization.Serializable
 
@@ -36,6 +36,9 @@ sealed interface HomeDestinations {
         val members: Int,
         val demographic: String,
     ) : HomeDestinations
+
+    @Serializable
+    data object TopHitAnime : HomeDestinations
 }
 
 @Serializable

@@ -16,7 +16,7 @@
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
         android:theme="@style/Theme.MADSkill"
-        tools:targetApi="31">
+        tools:targetApi="33">
         <activity
             android:name="com.babygroot.shanime.ui.MainActivity"
             android:configChanges="locale|layoutDirection|uiMode"

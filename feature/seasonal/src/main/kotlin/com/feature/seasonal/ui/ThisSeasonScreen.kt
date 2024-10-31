@@ -44,7 +44,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -58,7 +57,6 @@ import com.core.designsystem.indication.ScaleIndication
 import com.core.model.home.AiringSeasonalAnimeModel
 import com.core.model.home.AnimeMetadataModel
 import com.feature.seasonal.R
-import com.feature.seasonal.SeasonalDestinations
 import com.feature.seasonal.SeasonalSharedElementKey
 import com.feature.seasonal.SeasonalSharedElementType
 import kotlinx.coroutines.flow.Flow
@@ -67,7 +65,7 @@ import java.text.DecimalFormat
 @Composable
 fun ThisSeasonScreen(
     airingAnime: Flow<PagingData<AiringSeasonalAnimeModel>>,
-    navController: NavController,
+    onSeasonalItemClick: (model: AiringSeasonalAnimeModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val items = airingAnime.collectAsLazyPagingItems()
@@ -124,20 +122,7 @@ fun ThisSeasonScreen(
                             genres = item?.genres.orEmpty(),
                             onClick = {
                                 if (item == null) return@SeasonalItem
-                                navController.navigate(
-                                    route = SeasonalDestinations.AnimeDetail(
-                                        id = item.malId,
-                                        title = item.title,
-                                        image = item.image,
-                                        score = item.score.toString(),
-                                        members = item.members,
-                                        releasedYear = item.year.toString(),
-                                        isAiring = item.isAiring,
-                                        genres = item.genres.joinToString(separator = ", ") { it.name },
-                                        synopsis = item.synopsis,
-                                        trailerVideoId = item.trailerVideoId,
-                                    ),
-                                )
+                                onSeasonalItemClick(item)
                             },
                             modifier = Modifier.animateItem(),
                         )

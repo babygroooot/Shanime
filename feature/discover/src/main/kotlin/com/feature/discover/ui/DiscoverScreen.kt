@@ -44,8 +44,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -57,7 +55,6 @@ import com.core.designsystem.component.shimmerEffect
 import com.core.designsystem.indication.ScaleIndication
 import com.core.model.home.AnimeMetadataModel
 import com.core.model.home.TopAnimeModel
-import com.feature.discover.DiscoverDestinations
 import com.feature.discover.R
 import com.feature.discover.viewmodel.DiscoverViewModel
 import kotlinx.coroutines.flow.Flow
@@ -67,7 +64,8 @@ import kotlinx.coroutines.flow.flowOf
 @Composable
 fun DiscoverScreen(
     topAnime: Flow<PagingData<TopAnimeModel>>,
-    navController: NavController,
+    onSearchClick: () -> Unit,
+    onDiscoverItemClick: (id: Long, title: String, image: String, score: String, members: Int, releasedYear: String, isAiring: Boolean, genres: String, synopsis: String, trailerVideoId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -83,9 +81,7 @@ fun DiscoverScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = {
-                            navController.navigate(route = DiscoverDestinations.Search)
-                        },
+                        onClick = onSearchClick,
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_search),
@@ -158,19 +154,17 @@ fun DiscoverScreen(
                                 season = item.season.capitalize(Locale.current),
                                 genres = item.genres,
                                 onClick = {
-                                    navController.navigate(
-                                        route = DiscoverDestinations.AnimeDetail(
-                                            id = item.malId,
-                                            title = item.title,
-                                            image = item.image,
-                                            score = item.score,
-                                            members = item.members,
-                                            releasedYear = item.year,
-                                            isAiring = item.isAiring,
-                                            genres = item.genres.joinToString(separator = ", ") { it.name },
-                                            synopsis = item.synopsis,
-                                            trailerVideoId = item.trailerVideoId,
-                                        ),
+                                    onDiscoverItemClick(
+                                        item.malId,
+                                        item.title,
+                                        item.image,
+                                        item.score,
+                                        item.members,
+                                        item.year,
+                                        item.isAiring,
+                                        item.genres.joinToString(separator = ", ") { it.name },
+                                        item.synopsis,
+                                        item.trailerVideoId,
                                     )
                                 },
                                 modifier = Modifier
@@ -187,13 +181,15 @@ fun DiscoverScreen(
 
 @Composable
 fun DiscoverScreen(
-    navController: NavController,
+    onSearchClick: () -> Unit,
+    onDiscoverItemClick: (id: Long, title: String, image: String, score: String, members: Int, releasedYear: String, isAiring: Boolean, genres: String, synopsis: String, trailerVideoId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiscoverViewModel = hiltViewModel(),
 ) {
     DiscoverScreen(
         topAnime = viewModel.topAnime,
-        navController = navController,
+        onSearchClick = onSearchClick,
+        onDiscoverItemClick = onDiscoverItemClick,
         modifier = modifier,
     )
 }
@@ -329,7 +325,8 @@ private fun DiscoverScreenPreview() {
     ShanimeTheme {
         DiscoverScreen(
             topAnime = flowOf(),
-            navController = rememberNavController(),
+            onSearchClick = {},
+            onDiscoverItemClick = { _, _, _, _, _, _, _, _, _, _ -> },
         )
     }
 }

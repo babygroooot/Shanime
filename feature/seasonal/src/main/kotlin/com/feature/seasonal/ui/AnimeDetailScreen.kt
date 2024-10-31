@@ -26,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
@@ -39,13 +38,18 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.core.designsystem.ShanimeTheme
+import com.core.designsystem.component.imageviewer.ImageViewer
+import com.core.designsystem.component.imageviewer.rememberImageViewerState
 import com.core.model.home.UserCommentModel
 import com.feature.seasonal.R
 import com.feature.seasonal.state.AnimeDetailUiState
 import com.feature.seasonal.viewmodel.AnimeDetailViewModel
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +65,7 @@ fun AnimeDetailScreen(
     synopsis: String,
     trailerVideoId: String,
     uiState: AnimeDetailUiState,
-    navController: NavController,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -88,7 +92,7 @@ fun AnimeDetailScreen(
                 ).coerceIn(0f..1f)
         }
     }
-    val colorBackground = ShanimeTheme.colors.background
+    val hazeState = remember { HazeState() }
     Scaffold(
         containerColor = ShanimeTheme.colors.background,
         topBar = {
@@ -119,9 +123,7 @@ fun AnimeDetailScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        },
+                        onClick = onNavigateUp,
                         modifier = Modifier
                             .testTag(tag = "seasonal_navigate_back_button"),
                     ) {
@@ -137,30 +139,40 @@ fun AnimeDetailScreen(
                     containerColor = Color.Transparent,
                 ),
                 modifier = Modifier
-                    .drawWithCache {
-                        onDrawBehind {
-                            drawRect(
-                                color = colorBackground,
-                                alpha = bannerCollapsePercentage,
-                            )
-                        }
+                    .hazeChild(
+                        state = hazeState,
+                        style = HazeStyle(
+                            backgroundColor = ShanimeTheme.colors.background,
+                            tint = null,
+                            blurRadius = 25.dp,
+                            fallbackTint = HazeTint(
+                                color = ShanimeTheme.colors.background,
+                            ),
+                        ),
+                    ) {
+                        alpha = bannerCollapsePercentage
                     },
             )
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier = modifier,
     ) { innerPadding ->
+        val imageViewerState = rememberImageViewerState()
         LazyColumn(
             state = lazyListState,
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = innerPadding.calculateBottomPadding()),
+                .padding(bottom = innerPadding.calculateBottomPadding())
+                .haze(state = hazeState),
         ) {
             item {
                 AnimeBannerItem(
                     id = id,
                     image = image,
+                    onBannerClick = { image ->
+                        imageViewerState.viewImage(image = image)
+                    },
                     onSizeChanged = { intSize ->
                         bannerIntSize = intSize
                     },
@@ -218,6 +230,9 @@ fun AnimeDetailScreen(
                 }
             }
         }
+        ImageViewer(
+            state = imageViewerState,
+        )
     }
 }
 
@@ -233,7 +248,7 @@ fun AnimeDetailScreen(
     genres: String,
     synopsis: String,
     trailerVideoId: String,
-    navController: NavController,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AnimeDetailViewModel = hiltViewModel(),
 ) {
@@ -250,7 +265,7 @@ fun AnimeDetailScreen(
         synopsis = synopsis,
         trailerVideoId = trailerVideoId,
         uiState = uiState,
-        navController = navController,
+        onNavigateUp = onNavigateUp,
         modifier = modifier,
     )
 }
@@ -301,7 +316,7 @@ private fun AnimeDetailScreenPreview() {
                     ),
                 ),
             ),
-            navController = rememberNavController(),
+            onNavigateUp = {},
         )
     }
 }

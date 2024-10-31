@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -22,13 +21,12 @@ import androidx.paging.compose.itemKey
 import com.core.designsystem.component.ErrorIndication
 import com.core.model.home.AiringSeasonalAnimeModel
 import com.feature.seasonal.R
-import com.feature.seasonal.SeasonalDestinations
 import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun UpcomingScreen(
     upcomingAnime: Flow<PagingData<AiringSeasonalAnimeModel>>,
-    navController: NavController,
+    onSeasonalItemClick: (model: AiringSeasonalAnimeModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val items = upcomingAnime.collectAsLazyPagingItems()
@@ -85,20 +83,7 @@ fun UpcomingScreen(
                             genres = item?.genres.orEmpty(),
                             onClick = {
                                 if (item == null) return@SeasonalItem
-                                navController.navigate(
-                                    route = SeasonalDestinations.AnimeDetail(
-                                        id = item.malId,
-                                        title = item.title,
-                                        image = item.image,
-                                        score = item.score,
-                                        members = item.members,
-                                        releasedYear = item.year.toString(),
-                                        isAiring = item.isAiring,
-                                        genres = item.genres.joinToString(separator = ", ") { it.name },
-                                        synopsis = item.synopsis,
-                                        trailerVideoId = item.trailerVideoId,
-                                    ),
-                                )
+                                onSeasonalItemClick(item)
                             },
                             modifier = Modifier.animateItem(),
                         )

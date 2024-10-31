@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -74,6 +75,7 @@ fun AnimeBannerItem(
     image: String,
     navigateFromBanner: Boolean,
     onSizeChanged: (IntSize) -> Unit,
+    onBannerClick: (image: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -118,10 +120,20 @@ fun AnimeBannerItem(
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = { onBannerClick(image) },
+                    )
             } else {
                 Modifier
                     .fillMaxWidth()
                     .aspectRatio(ratio = 1.2f)
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = { onBannerClick(image) },
+                    )
             }
             AsyncImage(
                 model = ImageRequest.Builder(context)

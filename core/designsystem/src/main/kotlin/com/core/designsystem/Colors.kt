@@ -16,7 +16,7 @@ data class AppColorScheme(
 
 internal val ShanimeLightColorScheme = AppColorScheme(
     primary = Color(0xFF06C149),
-    secondary = Color(0x6606C149),
+    secondary = Color(0xB306C149),
     background = Color(0xFFFFFFFF),
     surface = Color(0xFFF5F5F5),
     textPrimary = Color(0xFF000000),

@@ -1,4 +1,4 @@
-package com.feature.seasonal
+package com.feature.seasonal.navigation
 
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
@@ -6,17 +6,18 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.core.designsystem.LocalNavAnimatedVisibilityScope
+import com.core.model.home.AiringSeasonalAnimeModel
 import com.feature.seasonal.ui.AnimeDetailScreen
 import com.feature.seasonal.ui.SeasonalScreen
 
 fun NavGraphBuilder.seasonalNavGraph(
-    navController: NavController,
+    onSeasonalItemClick: (model: AiringSeasonalAnimeModel) -> Unit,
+    onNavigateUp: () -> Unit,
 ) {
     navigation<SeasonalGraph>(startDestination = SeasonalDestinations.Seasonal) {
         composable<SeasonalDestinations.Seasonal>(
@@ -29,7 +30,7 @@ fun NavGraphBuilder.seasonalNavGraph(
                 LocalNavAnimatedVisibilityScope provides this,
             ) {
                 SeasonalScreen(
-                    navController = navController,
+                    onSeasonalItemClick = onSeasonalItemClick,
                 )
             }
         }
@@ -55,7 +56,7 @@ fun NavGraphBuilder.seasonalNavGraph(
                     genres = args.genres,
                     synopsis = args.synopsis,
                     trailerVideoId = args.trailerVideoId,
-                    navController = navController,
+                    onNavigateUp = onNavigateUp,
                 )
             }
         }

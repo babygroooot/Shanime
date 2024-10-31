@@ -37,7 +37,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.paging.PagingData
 import com.core.designsystem.ShanimeTheme
 import com.core.designsystem.component.pagerTabIndicatorOffset
@@ -55,7 +54,7 @@ import kotlinx.coroutines.launch
 fun SeasonalScreen(
     airingAnime: Flow<PagingData<AiringSeasonalAnimeModel>>,
     upcomingAnime: Flow<PagingData<AiringSeasonalAnimeModel>>,
-    navController: NavController,
+    onSeasonalItemClick: (model: AiringSeasonalAnimeModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val sharedTransitionScope = getSharedTransitionScope()
@@ -166,12 +165,12 @@ fun SeasonalScreen(
                         if (index == 0) {
                             ThisSeasonScreen(
                                 airingAnime = airingAnime,
-                                navController = navController,
+                                onSeasonalItemClick = onSeasonalItemClick,
                             )
                         } else {
                             UpcomingScreen(
                                 upcomingAnime = upcomingAnime,
-                                navController = navController,
+                                onSeasonalItemClick = onSeasonalItemClick,
                             )
                         }
                     }
@@ -186,14 +185,14 @@ fun SeasonalScreen(
 
 @Composable
 fun SeasonalScreen(
-    navController: NavController,
+    onSeasonalItemClick: (model: AiringSeasonalAnimeModel) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SeasonalViewModel = hiltViewModel(),
 ) {
     SeasonalScreen(
         airingAnime = viewModel.airingAnime,
         upcomingAnime = viewModel.upcomingAnime,
-        navController = navController,
+        onSeasonalItemClick = onSeasonalItemClick,
         modifier = modifier,
     )
 }

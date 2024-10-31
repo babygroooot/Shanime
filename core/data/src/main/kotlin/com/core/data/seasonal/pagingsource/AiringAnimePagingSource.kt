@@ -20,7 +20,7 @@ class AiringAnimePagingSource(
         val response = getAiringAnime(filter, sfw, unapproved, continuing, currentPage, ITEM_LIMIT)
         if (response is NetworkResult.Success) {
             LoadResult.Page(
-                data = response.data.data,
+                data = response.data.data.distinctBy { it.malId },
                 prevKey = if (currentPage == 1) null else currentPage.dec(),
                 nextKey = if (response.data.pagination.hasNextPage) currentPage.inc() else null,
             )

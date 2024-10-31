@@ -2,10 +2,10 @@ package com.babygroot.shanime
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.feature.discover.DiscoverGraph
-import com.feature.home.HomeGraph
-import com.feature.seasonal.SeasonalGraph
-import com.feature.setting.SettingGraph
+import com.feature.discover.navigation.DiscoverGraph
+import com.feature.home.navigation.HomeGraph
+import com.feature.seasonal.navigation.SeasonalGraph
+import com.feature.setting.navigation.SettingGraph
 import kotlinx.serialization.Serializable
 
 @Serializable

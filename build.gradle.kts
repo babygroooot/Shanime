@@ -21,6 +21,7 @@ plugins {
     alias(libs.plugins.room.gradlePlugin) apply false
     alias(libs.plugins.android.test) apply false
     alias(libs.plugins.baselineprofile) apply false
+    alias(libs.plugins.google.services) apply false
 }
 subprojects {
     apply<SpotlessPlugin>()

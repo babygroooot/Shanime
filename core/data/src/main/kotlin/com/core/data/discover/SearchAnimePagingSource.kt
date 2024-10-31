@@ -1,14 +1,13 @@
 package com.core.data.discover
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.core.common.network.exception.NetworkErrorException
 import com.core.data.ErrorDTO
 import com.core.data.ITEM_LIMIT
 import com.core.data.home.dto.TopAnimeDTO
 import com.core.data.home.dto.TopAnimeResponseDTO
 import com.core.network.util.NetworkResult
-import com.core.network.util.onException
 import javax.inject.Inject
 
 class SearchAnimePagingSource @Inject constructor(
@@ -18,9 +17,6 @@ class SearchAnimePagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TopAnimeDTO> = try {
         val currentPage = params.key ?: 1
         val response = searchAnime(searchValue, currentPage, ITEM_LIMIT)
-        response.onException { e, code ->
-            Log.d("dddddddddddddddddddd", "$e")
-        }
         if (response is NetworkResult.Success) {
             LoadResult.Page(
                 data = response.data.data,
@@ -29,7 +25,7 @@ class SearchAnimePagingSource @Inject constructor(
             )
         } else {
             LoadResult.Error(
-                throwable = Exception(),
+                throwable = NetworkErrorException(),
             )
         }
     } catch (exception: Exception) {

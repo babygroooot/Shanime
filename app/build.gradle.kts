@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.plugin.serialization)
     alias(libs.plugins.android.application)
     alias(libs.plugins.baselineprofile)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -35,6 +36,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.profileinstaller)
     implementation(libs.core.splashscreen)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
     implementation(projects.core.designsystem)
     implementation(projects.feature.home)
     implementation(projects.feature.discover)

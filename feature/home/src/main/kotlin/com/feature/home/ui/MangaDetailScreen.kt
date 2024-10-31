@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -47,7 +48,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -66,14 +66,14 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.transformations
 import com.core.designsystem.BlurTransformation
 import com.core.designsystem.ShanimeTheme
 import com.core.designsystem.component.ExpandableText
+import com.core.designsystem.component.imageviewer.ImageViewer
+import com.core.designsystem.component.imageviewer.rememberImageViewerState
 import com.core.designsystem.getNavAnimatedVisibilityScope
 import com.core.designsystem.getSharedTransitionScope
 import com.core.model.home.UserCommentModel
@@ -82,6 +82,11 @@ import com.feature.home.HomeSharedElementType
 import com.feature.home.R
 import com.feature.home.state.MangaDetailUiState
 import com.feature.home.viewmodel.MangaDetailViewModel
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import java.text.DecimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
@@ -94,11 +99,10 @@ fun MangaDetailScreen(
     members: Int,
     authorName: String,
     demographic: String,
-    isAiring: Boolean,
     genres: String,
     synopsis: String,
     uiState: MangaDetailUiState,
-    navController: NavController,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -122,9 +126,9 @@ fun MangaDetailScreen(
             (scrollValue.coerceAtMost(bannerIntSize.height).toFloat() / bannerIntSize.height).coerceIn(0f..1f)
         }
     }
-    val colorBackground = ShanimeTheme.colors.background
     val sharedTransitionScope = getSharedTransitionScope()
     val animatedVisibilityScope = getNavAnimatedVisibilityScope()
+    val hazeState = remember { HazeState() }
     with(sharedTransitionScope) {
         Scaffold(
             containerColor = ShanimeTheme.colors.background,
@@ -146,9 +150,7 @@ fun MangaDetailScreen(
                     },
                     navigationIcon = {
                         IconButton(
-                            onClick = {
-                                navController.navigateUp()
-                            },
+                            onClick = onNavigateUp,
                             modifier = Modifier
                                 .testTag(tag = "manga_navigate_back_button"),
                         ) {
@@ -164,13 +166,18 @@ fun MangaDetailScreen(
                         containerColor = Color.Transparent,
                     ),
                     modifier = Modifier
-                        .drawWithCache {
-                            onDrawBehind {
-                                drawRect(
-                                    color = colorBackground,
-                                    alpha = bannerCollapsePercentage,
-                                )
-                            }
+                        .hazeChild(
+                            state = hazeState,
+                            style = HazeStyle(
+                                backgroundColor = ShanimeTheme.colors.background,
+                                tint = null,
+                                blurRadius = 25.dp,
+                                fallbackTint = HazeTint(
+                                    color = ShanimeTheme.colors.background,
+                                ),
+                            ),
+                        ) {
+                            alpha = bannerCollapsePercentage
                         },
                 )
             },
@@ -192,16 +199,21 @@ fun MangaDetailScreen(
                     ),
                 ),
         ) { innerPadding ->
+            val imageViewerState = rememberImageViewerState()
             LazyColumn(
                 state = lazyListState,
                 contentPadding = WindowInsets.navigationBars.asPaddingValues(),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = innerPadding.calculateBottomPadding()),
+                    .padding(bottom = innerPadding.calculateBottomPadding())
+                    .haze(state = hazeState),
             ) {
                 item {
                     MangaBannerItem(
                         image = image,
+                        onBannerClick = { image ->
+                            imageViewerState.viewImage(image = image)
+                        },
                         onSizeChanged = { intSize ->
                             bannerIntSize = intSize
                         },
@@ -214,7 +226,6 @@ fun MangaDetailScreen(
                         members = members,
                         authorName = authorName,
                         demographic = demographic,
-                        isAiring = isAiring,
                         genres = genres,
                         synopsis = synopsis,
                     )
@@ -258,6 +269,9 @@ fun MangaDetailScreen(
                     }
                 }
             }
+            ImageViewer(
+                state = imageViewerState,
+            )
         }
     }
 }
@@ -271,10 +285,9 @@ fun MangaDetailScreen(
     members: Int,
     authorName: String,
     demographic: String,
-    isOnGoing: Boolean,
     genres: String,
     synopsis: String,
-    navController: NavController,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MangaDetailViewModel = hiltViewModel(),
 ) {
@@ -287,11 +300,10 @@ fun MangaDetailScreen(
         members = members,
         authorName = authorName,
         demographic = demographic,
-        isAiring = isOnGoing,
         genres = genres,
         synopsis = synopsis,
         uiState = uiState,
-        navController = navController,
+        onNavigateUp = onNavigateUp,
         modifier = modifier,
     )
 }
@@ -299,6 +311,7 @@ fun MangaDetailScreen(
 @Composable
 fun MangaBannerItem(
     image: String,
+    onBannerClick: (image: String) -> Unit,
     onSizeChanged: (IntSize) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -324,7 +337,12 @@ fun MangaBannerItem(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(ratio = 1.2f),
+                .aspectRatio(ratio = 1.2f)
+                .clickable(
+                    interactionSource = null,
+                    indication = null,
+                    onClick = { onBannerClick(image) },
+                ),
         )
     }
 }
@@ -336,7 +354,6 @@ fun MangaMiddleContentItem(
     members: Int,
     authorName: String,
     demographic: String,
-    isAiring: Boolean,
     genres: String,
     synopsis: String,
     modifier: Modifier = Modifier,
@@ -369,11 +386,6 @@ fun MangaMiddleContentItem(
             val formattedMembers = remember {
                 DecimalFormat("#,###")
                     .format(members)
-            }
-            val airingStatus = if (isAiring) {
-                stringResource(id = R.string.feature_home_publishing)
-            } else {
-                stringResource(id = R.string.feature_home_finished)
             }
             Icon(
                 imageVector = Icons.Rounded.StarRate,
@@ -416,19 +428,6 @@ fun MangaMiddleContentItem(
             Spacer(modifier = Modifier.size(10.dp))
             Text(
                 text = demographic,
-                style = ShanimeTheme.typography.bodySmall,
-                color = ShanimeTheme.colors.primary,
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = ShanimeTheme.colors.primary,
-                        shape = RoundedCornerShape(4.dp),
-                    )
-                    .padding(4.dp),
-            )
-            Spacer(modifier = Modifier.size(10.dp))
-            Text(
-                text = airingStatus,
                 style = ShanimeTheme.typography.bodySmall,
                 color = ShanimeTheme.colors.primary,
                 modifier = Modifier
@@ -507,7 +506,6 @@ private fun MangaDetailScreenPreview() {
             members = 100000,
             authorName = "2024",
             demographic = "PG-13 - Teens 13 or older",
-            isAiring = true,
             genres = "",
             synopsis = "Barely surviving in a barrel after passing through a terrible whirlpool at sea, carefree Monkey D. Luffy ends up aboard a ship under attack by fearsome pirates. Despite being a naive-looking teenager, he is not to be underestimated. Unmatched in battle, Luffy is a pirate himself who resolutely pursues the coveted One Piece treasure and the King of the Pirates title that comes with it.\\n\\nThe late King of the Pirates, Gol D. Roger, stirred up the world before his death by disclosing the whereabouts of his hoard of riches and daring everyone to obtain it. Ever since then, countless powerful pirates have sailed dangerous seas for the prized One Piece only to never return. Although Luffy lacks a crew and a proper ship, he is endowed with a superhuman ability and an unbreakable spirit that make him not only a formidable adversary but also an inspiration to many.\\n\\nAs he faces numerous challenges with a big smile on his face, Luffy gathers one-of-a-kind companions to join him in his ambitious endeavor, together embracing perils and wonders on their once-in-a-lifetime adventure.\\n\\n[Written by MAL Rewrite]",
             uiState = MangaDetailUiState.Success(
@@ -541,7 +539,7 @@ private fun MangaDetailScreenPreview() {
                     ),
                 ),
             ),
-            navController = rememberNavController(),
+            onNavigateUp = {},
         )
     }
 }

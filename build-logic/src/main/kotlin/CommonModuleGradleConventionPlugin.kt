@@ -22,10 +22,6 @@ class CommonModuleGradleConventionPlugin: Plugin<Project> {
                     viewBinding = true
                     buildConfig = true
                 }
-                dependencies {
-                    add("implementation", libs.findLibrary("androidx.appcompat").get())
-                    add("implementation", libs.findLibrary("androidx.fragment").get())
-                }
             }
         }
     }

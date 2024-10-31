@@ -1,4 +1,4 @@
-package com.feature.home
+package com.feature.home.navigation
 
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
@@ -7,18 +7,26 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import com.core.designsystem.LocalNavAnimatedVisibilityScope
+import com.core.model.home.AiringSeasonalAnimeModel
+import com.core.model.home.TopAnimeModel
+import com.core.model.home.TopMangaModel
 import com.feature.home.ui.AnimeDetailScreen
 import com.feature.home.ui.HomeScreen
 import com.feature.home.ui.MangaDetailScreen
+import com.feature.home.ui.TopHitAnimeScreen
 
 fun NavGraphBuilder.homeNavGraph(
-    navController: NavController,
+    onViewDetailClick: (airingAnimeModel: AiringSeasonalAnimeModel) -> Unit,
+    onTopAnimeItemClick: (topAnimeModel: TopAnimeModel) -> Unit,
+    onTopMangaItemClick: (topManga: TopMangaModel) -> Unit,
+    onViewAllTopAnimeClick: () -> Unit,
+    onSearchAnimeClick: () -> Unit,
+    onNavigateUp: () -> Unit,
 ) {
     navigation<HomeGraph>(startDestination = HomeDestinations.Home) {
         composable<HomeDestinations.Home>(
@@ -31,7 +39,10 @@ fun NavGraphBuilder.homeNavGraph(
                 LocalNavAnimatedVisibilityScope provides this,
             ) {
                 HomeScreen(
-                    navController = navController,
+                    onViewDetailClick = onViewDetailClick,
+                    onTopAnimeItemClick = onTopAnimeItemClick,
+                    onTopMangaItemClick = onTopMangaItemClick,
+                    onViewAllTopAnimeClick = onViewAllTopAnimeClick,
                     viewModel = hiltViewModel(),
                 )
             }
@@ -59,7 +70,7 @@ fun NavGraphBuilder.homeNavGraph(
                     synopsis = args.synopsis,
                     trailerVideoId = args.trailerVideoId,
                     navigateFromBanner = args.navigateFromBanner,
-                    navController = navController,
+                    onNavigateUp = onNavigateUp,
                 )
             }
         }
@@ -82,12 +93,19 @@ fun NavGraphBuilder.homeNavGraph(
                     members = args.members,
                     authorName = args.authorName,
                     demographic = args.demographic,
-                    isOnGoing = args.isOnGoing,
                     genres = args.genres,
                     synopsis = args.synopsis,
-                    navController = navController,
+                    onNavigateUp = onNavigateUp,
                 )
             }
+        }
+
+        composable<HomeDestinations.TopHitAnime> {
+            TopHitAnimeScreen(
+                onTopAnimeItemClick = onTopAnimeItemClick,
+                onSearchAnimeClick = onSearchAnimeClick,
+                onNavigateUp = onNavigateUp,
+            )
         }
     }
 }

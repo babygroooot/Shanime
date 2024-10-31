@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "971939451280",
+    "project_id": "shanime-43e38",
+    "storage_bucket": "shanime-43e38.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:971939451280:android:a3f661d918cb91a7b32315",
+        "android_client_info": {
+          "package_name": "com.babygroot.shanime"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9PBsWJJZSLSuBw_cAhkW56yMeun9NyXY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:971939451280:android:a33bee170f301908b32315",
+        "android_client_info": {
+          "package_name": "com.babygroot.shanime.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9PBsWJJZSLSuBw_cAhkW56yMeun9NyXY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

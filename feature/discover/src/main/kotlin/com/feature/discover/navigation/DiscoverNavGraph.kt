@@ -1,4 +1,4 @@
-package com.feature.discover
+package com.feature.discover.navigation
 
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -17,7 +16,9 @@ import com.feature.discover.ui.DiscoverScreen
 import com.feature.discover.ui.SearchAnimeScreen
 
 fun NavGraphBuilder.discoverNavGraph(
-    navController: NavController,
+    onSearchClick: () -> Unit,
+    onDiscoverItemClick: (id: Long, title: String, image: String, score: String, members: Int, releasedYear: String, isAiring: Boolean, genres: String, synopsis: String, trailerVideoId: String) -> Unit,
+    onNavigateUp: () -> Unit,
 ) {
     navigation<DiscoverGraph>(startDestination = DiscoverDestinations.Discover) {
         composable<DiscoverDestinations.Discover>(
@@ -27,7 +28,8 @@ fun NavGraphBuilder.discoverNavGraph(
             popExitTransition = { fadeOut(tween(easing = EaseOut)) },
         ) {
             DiscoverScreen(
-                navController = navController,
+                onSearchClick = onSearchClick,
+                onDiscoverItemClick = onDiscoverItemClick,
             )
         }
 
@@ -41,7 +43,8 @@ fun NavGraphBuilder.discoverNavGraph(
                 LocalNavAnimatedVisibilityScope provides this,
             ) {
                 SearchAnimeScreen(
-                    navController = navController,
+                    onDiscoverItemClick = onDiscoverItemClick,
+                    onNavigateUp = onNavigateUp,
                 )
             }
         }
@@ -59,7 +62,7 @@ fun NavGraphBuilder.discoverNavGraph(
                 genres = args.genres,
                 synopsis = args.synopsis,
                 trailerVideoId = args.trailerVideoId,
-                navController = navController,
+                onNavigateUp = onNavigateUp,
             )
         }
     }

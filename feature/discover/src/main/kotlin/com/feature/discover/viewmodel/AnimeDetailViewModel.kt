@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.core.common.OnetimeWhileSubscribed
 import com.core.domain.home.GetAnimeUserCommentPreviewUseCase
-import com.feature.discover.DiscoverDestinations
+import com.feature.discover.navigation.DiscoverDestinations
 import com.feature.discover.state.AnimeDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map

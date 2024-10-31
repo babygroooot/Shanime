@@ -6,14 +6,23 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -45,7 +54,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,12 +66,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -70,16 +87,21 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.core.designsystem.ShanimeTheme
 import com.core.designsystem.component.ThemeSwitcher
 import com.core.model.main.ShanimeLanguage
 import com.core.model.main.ShanimeThemeConfig
 import com.feature.setting.R
-import com.feature.setting.SettingDestinations
+import com.feature.setting.calculateAngle
+import com.feature.setting.findNearAngle
+import com.feature.setting.findNextAngle
+import com.feature.setting.normalizeAngle
 import com.feature.setting.viewmodel.SettingViewModel
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlin.math.abs
+import kotlin.math.max
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,7 +109,7 @@ fun SettingScreen(
     isDarkTheme: Boolean,
     selectedLanguage: ShanimeLanguage,
     onSwitchTheme: () -> Unit,
-    navController: NavController,
+    onFontSizeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -132,16 +154,41 @@ fun SettingScreen(
             modifier = Modifier
                 .padding(innerPadding),
         ) {
+            val colorPrimary = ShanimeTheme.colors.primary
+            val colorSecondary = ShanimeTheme.colors.secondary
+            val density = LocalDensity.current
+            val backgroundWidth = with(density) {
+                LocalConfiguration.current.screenWidthDp.dp.toPx() - 40.dp.toPx()
+            }
+            val infiniteTransition = rememberInfiniteTransition(label = "Infinite Transition")
+            val animatedShanimeBackgroundXOffset by infiniteTransition.animateFloat(
+                initialValue = 0f,
+                targetValue = backgroundWidth,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 8_000),
+                    repeatMode = RepeatMode.Reverse,
+                ),
+                label = "Animated Background",
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(20.dp)
                     .fillMaxWidth()
                     .height(IntrinsicSize.Max)
-                    .background(
-                        color = ShanimeTheme.colors.secondary,
-                        shape = RoundedCornerShape(8.dp),
-                    )
+                    .clip(shape = RoundedCornerShape(8.dp))
+                    .drawWithCache {
+                        onDrawBehind {
+                            val maxRadius = max(size.height, size.width)
+                            drawRect(
+                                brush = Brush.radialGradient(
+                                    colors = listOf(colorSecondary, colorPrimary),
+                                    radius = maxRadius / 1.5f,
+                                    center = Offset(x = animatedShanimeBackgroundXOffset, y = center.y * 1.5f),
+                                ),
+                            )
+                        }
+                    }
                     .padding(20.dp),
             ) {
                 Column(
@@ -158,7 +205,6 @@ fun SettingScreen(
                             Color.Red,
                         ),
                     )
-                    val infiniteTransition = rememberInfiniteTransition(label = "animatedBorder")
                     val angle by infiniteTransition.animateFloat(
                         initialValue = 0f,
                         targetValue = 360f,
@@ -207,10 +253,67 @@ fun SettingScreen(
                         )
                     }
                 }
-                Image(
-                    painter = painterResource(id = R.drawable.ic_shanime),
-                    contentDescription = null,
-                    modifier = Modifier.size(80.dp),
+                val iconInteractionSource = remember {
+                    MutableInteractionSource()
+                }
+                var targetAngle by remember { mutableFloatStateOf(0f) }
+                var dragInProgress by remember { mutableStateOf(false) }
+                val iconRotationAngle by animateFloatAsState(
+                    targetValue = targetAngle,
+                    animationSpec = spring(
+                        stiffness = if (dragInProgress) Spring.StiffnessHigh else Spring.StiffnessLow,
+                    ),
+                    label = "",
+                )
+                val frontSideIsShowing by remember {
+                    derivedStateOf {
+                        abs(iconRotationAngle.normalizeAngle()) !in 90f..270f
+                    }
+                }
+                val density = LocalDensity.current
+
+                val iconWidth = remember { 90.dp }
+                val diff = remember {
+                    180f / iconWidth.value
+                }
+                val draggableState = rememberDraggableState { offsetX ->
+                    val calculatedAngle =
+                        calculateAngle(offsetX = offsetX, density = density, diff = diff)
+                    targetAngle += calculatedAngle
+                }
+                LaunchedEffect(frontSideIsShowing) {
+                    iconInteractionSource.interactions
+                        .filterIsInstance<PressInteraction.Release>()
+                        .map {
+                            val offsetInDp = with(density) {
+                                it.press.pressPosition.x.toDp()
+                            }
+                            val offsetXForContainer =
+                                if (frontSideIsShowing) {
+                                    offsetInDp
+                                } else {
+                                    iconWidth - offsetInDp
+                                }
+                            iconWidth / offsetXForContainer > 2
+                        }
+                        .collect { spinClockwise ->
+                            targetAngle = targetAngle.findNextAngle(spinClockwise)
+                        }
+                }
+                ShanimeIcon(
+                    rotationAngle = { iconRotationAngle },
+                    interactionSource = iconInteractionSource,
+                    modifier = Modifier.draggable(
+                        state = draggableState,
+                        orientation = Orientation.Horizontal,
+                        onDragStarted = {
+                            dragInProgress = true
+                        },
+                        onDragStopped = { lastVelocity ->
+                            dragInProgress = false
+                            targetAngle = targetAngle.findNearAngle(velocity = lastVelocity)
+                        },
+                    ),
                 )
             }
             SettingMenuItem(
@@ -225,9 +328,7 @@ fun SettingScreen(
             SettingMenuItem(
                 icon = Icons.Rounded.FormatSize,
                 title = stringResource(id = R.string.feature_setting_font_size),
-                onClick = {
-                    navController.navigate(SettingDestinations.FontSize)
-                },
+                onClick = onFontSizeClick,
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
             Spacer(modifier = Modifier.size(10.dp))
@@ -268,7 +369,7 @@ fun SettingScreen(
 
 @Composable
 fun SettingScreen(
-    navController: NavController,
+    onFontSizeClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingViewModel = hiltViewModel(),
 ) {
@@ -289,7 +390,7 @@ fun SettingScreen(
                 config = config,
             )
         },
-        navController = navController,
+        onFontSizeClick = onFontSizeClick,
         modifier = modifier,
     )
 }
@@ -348,6 +449,55 @@ private fun SettingMenuItem(
     }
 }
 
+@Composable
+fun ShanimeIcon(
+    rotationAngle: () -> Float,
+    interactionSource: MutableInteractionSource,
+    modifier: Modifier = Modifier,
+) {
+    val iconModifier = Modifier
+        .graphicsLayer {
+            rotationY = rotationAngle()
+            cameraDistance = 12.dp.toPx()
+        }
+        .clickable(
+            interactionSource = interactionSource,
+            indication = null,
+            onClick = {},
+        )
+    val needRenderBackSide by remember {
+        derivedStateOf {
+            val normalizedAngle = rotationAngle().normalizeAngle()
+            normalizedAngle in 90f..270f
+        }
+    }
+    Box(
+        modifier = modifier,
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_shanime),
+            contentDescription = null,
+            modifier = iconModifier
+                .size(80.dp)
+                .graphicsLayer {
+                    alpha = if (needRenderBackSide) 0f else 1f
+                },
+        )
+        Image(
+            painter = painterResource(id = R.drawable.cat_placeholder),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = iconModifier
+                .size(80.dp)
+                .graphicsLayer {
+                    alpha = if (needRenderBackSide) 1f else 0f
+                    rotationY = 180f
+                }
+                .clip(shape = CircleShape),
+        )
+    }
+}
+
 @PreviewLightDark
 @Composable
 private fun SettingScreenPreview() {
@@ -356,7 +506,7 @@ private fun SettingScreenPreview() {
             isDarkTheme = false,
             selectedLanguage = ShanimeLanguage.ENGLISH,
             onSwitchTheme = {},
-            navController = rememberNavController(),
+            onFontSizeClick = {},
         )
     }
 }

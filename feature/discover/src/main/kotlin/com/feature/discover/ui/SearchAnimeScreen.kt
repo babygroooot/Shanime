@@ -27,16 +27,14 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -46,7 +44,6 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.core.designsystem.ShanimeTheme
 import com.core.designsystem.getNavAnimatedVisibilityScope
 import com.core.model.home.TopAnimeModel
-import com.feature.discover.DiscoverDestinations
 import com.feature.discover.R
 import com.feature.discover.viewmodel.SearchAnimeViewModel
 import kotlinx.coroutines.flow.Flow
@@ -57,7 +54,8 @@ fun SearchAnimeScreen(
     searchValue: String,
     searchAnime: Flow<PagingData<TopAnimeModel>>,
     onSearchValueChange: (String) -> Unit,
-    navController: NavController,
+    onNavigateUp: () -> Unit,
+    onDiscoverItemClick: (id: Long, title: String, image: String, score: String, members: Int, releasedYear: String, isAiring: Boolean, genres: String, synopsis: String, trailerVideoId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -83,9 +81,7 @@ fun SearchAnimeScreen(
         ) {
             with(animatedVisibilityScope) {
                 IconButton(
-                    onClick = {
-                        navController.navigateUp()
-                    },
+                    onClick = onNavigateUp,
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
                         .animateEnterExit(
@@ -124,7 +120,7 @@ fun SearchAnimeScreen(
                     textStyle = ShanimeTheme.typography.titleSmall,
                     placeholder = {
                         Text(
-                            text = "Search",
+                            text = stringResource(id = R.string.feature_discover_search),
                             style = ShanimeTheme.typography.titleSmall,
                         )
                     },
@@ -162,7 +158,7 @@ fun SearchAnimeScreen(
                                     .size(size = 180.dp),
                             )
                             Text(
-                                text = "Type keywords to search",
+                                text = stringResource(id = R.string.feature_discover_search_decs),
                                 style = ShanimeTheme.typography.titleSmall,
                                 color = ShanimeTheme.colors.textPrimary,
                             )
@@ -185,19 +181,17 @@ fun SearchAnimeScreen(
                             genres = item?.genres.orEmpty(),
                             onClick = {
                                 if (item == null) return@DiscoverItem
-                                navController.navigate(
-                                    route = DiscoverDestinations.AnimeDetail(
-                                        id = item.malId,
-                                        title = item.title,
-                                        image = item.image,
-                                        score = item.score,
-                                        members = item.members,
-                                        releasedYear = item.year,
-                                        isAiring = item.isAiring,
-                                        genres = item.genres.joinToString(separator = ", ") { it.name },
-                                        synopsis = item.synopsis,
-                                        trailerVideoId = item.trailerVideoId,
-                                    ),
+                                onDiscoverItemClick(
+                                    item.malId,
+                                    item.title,
+                                    item.image,
+                                    item.score,
+                                    item.members,
+                                    item.year,
+                                    item.isAiring,
+                                    item.genres.joinToString(separator = ", ") { it.name },
+                                    item.synopsis,
+                                    item.trailerVideoId,
                                 )
                             },
                             modifier = Modifier.animateItem(),
@@ -211,7 +205,8 @@ fun SearchAnimeScreen(
 
 @Composable
 fun SearchAnimeScreen(
-    navController: NavController,
+    onNavigateUp: () -> Unit,
+    onDiscoverItemClick: (id: Long, title: String, image: String, score: String, members: Int, releasedYear: String, isAiring: Boolean, genres: String, synopsis: String, trailerVideoId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchAnimeViewModel = hiltViewModel(),
 ) {
@@ -219,7 +214,8 @@ fun SearchAnimeScreen(
         searchAnime = viewModel.searchAnime,
         searchValue = viewModel.searchValue,
         onSearchValueChange = viewModel::onSearchValueChange,
-        navController = navController,
+        onNavigateUp = onNavigateUp,
+        onDiscoverItemClick = onDiscoverItemClick,
         modifier = modifier,
     )
 }
@@ -232,7 +228,8 @@ private fun SearchAnimeScreenPreview() {
             searchAnime = flowOf(),
             searchValue = "",
             onSearchValueChange = {},
-            navController = rememberNavController(),
+            onNavigateUp = {},
+            onDiscoverItemClick = { _, _, _, _, _, _, _, _, _, _ -> },
         )
     }
 }

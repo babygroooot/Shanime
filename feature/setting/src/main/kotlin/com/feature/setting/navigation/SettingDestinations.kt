@@ -1,4 +1,4 @@
-package com.feature.setting
+package com.feature.setting.navigation
 
 import kotlinx.serialization.Serializable
 

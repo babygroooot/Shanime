@@ -1,4 +1,4 @@
-package com.feature.seasonal
+package com.feature.seasonal.navigation
 
 import kotlinx.serialization.Serializable
 

@@ -27,10 +27,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.navOptions
 import com.babygroot.shanime.TopLevelDestination
 import com.core.designsystem.ShanimeTheme
-import com.feature.discover.DiscoverDestinations
-import com.feature.home.HomeDestinations
-import com.feature.seasonal.SeasonalDestinations
-import com.feature.setting.SettingDestinations
+import com.feature.discover.navigation.DiscoverDestinations
+import com.feature.home.navigation.HomeDestinations
+import com.feature.seasonal.navigation.SeasonalDestinations
+import com.feature.setting.navigation.SettingDestinations
 
 @Composable
 fun ShanimeBottomNavigation(

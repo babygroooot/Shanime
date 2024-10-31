@@ -35,8 +35,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.core.designsystem.ShanimeTheme
 import com.feature.setting.R
 import com.feature.setting.viewmodel.FontSizeViewModel
@@ -46,7 +44,7 @@ import com.feature.setting.viewmodel.FontSizeViewModel
 fun FontSizeScreen(
     fontSizeConfig: Float,
     onFontSizeChange: (Float) -> Unit,
-    navController: NavController,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -62,9 +60,7 @@ fun FontSizeScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        },
+                        onClick = onNavigateUp,
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBackIosNew,
@@ -194,15 +190,15 @@ fun FontSizeScreen(
 
 @Composable
 fun FontSizeScreen(
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavController,
     viewModel: FontSizeViewModel = hiltViewModel(),
 ) {
     val fontSizeConfig by viewModel.fontSizeConfig.collectAsStateWithLifecycle()
     FontSizeScreen(
         fontSizeConfig = fontSizeConfig,
         onFontSizeChange = viewModel::onFontSizeChange,
-        navController = navController,
+        onNavigateUp = onNavigateUp,
         modifier = modifier,
     )
 }
@@ -214,7 +210,7 @@ private fun FontSizeScreenPreview() {
         FontSizeScreen(
             fontSizeConfig = 0f,
             onFontSizeChange = {},
-            navController = rememberNavController(),
+            onNavigateUp = {},
         )
     }
 }

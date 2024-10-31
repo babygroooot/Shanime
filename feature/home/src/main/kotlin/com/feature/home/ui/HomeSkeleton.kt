@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ fun HomeSkeleton(modifier: Modifier = Modifier) {
                 .aspectRatio(ratio = 1.2f)
                 .shimmerEffect(
                     colors = ShanimeTheme.colors.shimmer,
+                    shape = RectangleShape,
                 ),
         )
         Row(

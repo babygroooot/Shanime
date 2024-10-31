@@ -8,10 +8,12 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
@@ -171,3 +173,7 @@ fun getSharedTransitionScope() = LocalSharedTransitionScope.current
 
 @Composable
 fun getNavAnimatedVisibilityScope() = LocalNavAnimatedVisibilityScope.current
+
+val WindowInsets.Companion.none: WindowInsets
+    @Stable
+    get() = WindowInsets(0, 0, 0, 0)
