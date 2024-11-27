@@ -20,6 +20,12 @@ sealed interface SeasonalDestinations {
         val synopsis: String,
         val trailerVideoId: String,
     ) : SeasonalDestinations
+
+    @Serializable
+    data class Archive(
+        val year: String,
+        val season: String,
+    )
 }
 
 @Serializable

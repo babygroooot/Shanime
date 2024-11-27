@@ -110,6 +110,8 @@ fun SettingScreen(
     selectedLanguage: ShanimeLanguage,
     onSwitchTheme: () -> Unit,
     onFontSizeClick: () -> Unit,
+    onTermAndConditionClick: () -> Unit,
+    onAboutUsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -270,7 +272,6 @@ fun SettingScreen(
                         abs(iconRotationAngle.normalizeAngle()) !in 90f..270f
                     }
                 }
-                val density = LocalDensity.current
 
                 val iconWidth = remember { 90.dp }
                 val diff = remember {
@@ -335,12 +336,14 @@ fun SettingScreen(
             SettingMenuItem(
                 icon = Icons.Rounded.PlaylistAddCheckCircle,
                 title = stringResource(id = R.string.feature_setting_term_and_condition),
+                onClick = onTermAndConditionClick,
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
             Spacer(modifier = Modifier.size(10.dp))
             SettingMenuItem(
                 icon = Icons.Outlined.Info,
                 title = stringResource(id = R.string.feature_setting_about_us),
+                onClick = onAboutUsClick,
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
             if (showLanguageBottomSheet) {
@@ -370,6 +373,8 @@ fun SettingScreen(
 @Composable
 fun SettingScreen(
     onFontSizeClick: () -> Unit,
+    onTermAndConditionClick: () -> Unit,
+    onAboutUsClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingViewModel = hiltViewModel(),
 ) {
@@ -391,6 +396,8 @@ fun SettingScreen(
             )
         },
         onFontSizeClick = onFontSizeClick,
+        onTermAndConditionClick = onTermAndConditionClick,
+        onAboutUsClick = onAboutUsClick,
         modifier = modifier,
     )
 }
@@ -484,7 +491,7 @@ fun ShanimeIcon(
                 },
         )
         Image(
-            painter = painterResource(id = R.drawable.cat_placeholder),
+            painter = painterResource(id = com.core.designsystem.R.drawable.image_preview_placeholder),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = iconModifier
@@ -507,6 +514,8 @@ private fun SettingScreenPreview() {
             selectedLanguage = ShanimeLanguage.ENGLISH,
             onSwitchTheme = {},
             onFontSizeClick = {},
+            onTermAndConditionClick = {},
+            onAboutUsClick = {},
         )
     }
 }

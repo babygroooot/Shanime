@@ -6,7 +6,7 @@ data class TopMangaModel(
     val image: String,
     val title: String,
     val synopsis: String,
-    val score: Float,
+    val score: String,
     val genres: List<AnimeMetadataModel>,
     val authorName: String,
     val isOnGoing: Boolean,

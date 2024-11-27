@@ -8,11 +8,15 @@ import androidx.compose.animation.fadeOut
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.feature.setting.ui.AboutUsScreen
 import com.feature.setting.ui.FontSizeScreen
 import com.feature.setting.ui.SettingScreen
+import com.feature.setting.ui.TermAndConditionScreen
 
 fun NavGraphBuilder.settingNavGraph(
     onFontSizeClick: () -> Unit,
+    onTermAndConditionClick: () -> Unit,
+    onAboutUsClick: () -> Unit,
     onNavigateUp: () -> Unit,
 ) {
     navigation<SettingGraph>(startDestination = SettingDestinations.Setting) {
@@ -24,10 +28,22 @@ fun NavGraphBuilder.settingNavGraph(
         ) {
             SettingScreen(
                 onFontSizeClick = onFontSizeClick,
+                onTermAndConditionClick = onTermAndConditionClick,
+                onAboutUsClick = onAboutUsClick,
             )
         }
         composable<SettingDestinations.FontSize> {
             FontSizeScreen(
+                onNavigateUp = onNavigateUp,
+            )
+        }
+        composable<SettingDestinations.TermAndCondition> {
+            TermAndConditionScreen(
+                onNavigateUp = onNavigateUp,
+            )
+        }
+        composable<SettingDestinations.AboutUs> {
+            AboutUsScreen(
                 onNavigateUp = onNavigateUp,
             )
         }

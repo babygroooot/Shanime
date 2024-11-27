@@ -14,7 +14,7 @@ interface ImageViewerState {
 
     fun viewImage(image: String)
 
-    fun hideImage()
+    fun closeImage()
 }
 
 internal class ImageViewerStateImpl : ImageViewerState {
@@ -28,7 +28,7 @@ internal class ImageViewerStateImpl : ImageViewerState {
         this.image = image
     }
 
-    override fun hideImage() {
+    override fun closeImage() {
         imageIsShown = false
         this.image = ""
     }

@@ -20,6 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import coil3.annotation.ExperimentalCoilApi
+import coil3.compose.AsyncImagePainter.State.Error
+import coil3.compose.AsyncImagePainter.State.Success
+import coil3.compose.AsyncImagePreviewHandler
+import coil3.compose.LocalAsyncImagePreviewHandler
+import coil3.compose.asPainter
+import coil3.request.ErrorResult
+import coil3.request.SuccessResult
 
 val LocalShanimeColor = staticCompositionLocalOf {
     AppColorScheme(
@@ -52,7 +60,7 @@ val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope
     error(message = "No AnimatedVisibilityScope found")
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalCoilApi::class)
 @Composable
 fun ShanimeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -115,6 +123,13 @@ fun ShanimeTheme(
                     ),
                     LocalNavAnimatedVisibilityScope provides this,
                     LocalSharedTransitionScope provides this@SharedTransitionLayout,
+                    LocalAsyncImagePreviewHandler provides AsyncImagePreviewHandler { imageLoader, request ->
+                        val newRequest = request.newBuilder().data(R.drawable.image_preview_placeholder).build()
+                        when (val result = imageLoader.execute(newRequest)) {
+                            is SuccessResult -> Success(result.image.asPainter(newRequest.context), result)
+                            is ErrorResult -> Error(result.image?.asPainter(newRequest.context), result)
+                        }
+                    },
                 ) {
                     content()
                 }

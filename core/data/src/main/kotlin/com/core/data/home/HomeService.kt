@@ -55,4 +55,12 @@ interface HomeService {
         @Query("preliminary") isPreliminary: Boolean,
         @Query("spoilers") isSpoiler: Boolean,
     ): NetworkResult<UserCommentResponseDTO, ErrorDTO>
+
+    @GET("manga")
+    suspend fun searchManga(
+        @Query("q") searchValue: String,
+        @Query("page") page: Int,
+        @Query("limit") limit: Int,
+        @Query("unapproved") unapproved: Boolean,
+    ): NetworkResult<TopMangaResponseDTO, ErrorDTO>
 }

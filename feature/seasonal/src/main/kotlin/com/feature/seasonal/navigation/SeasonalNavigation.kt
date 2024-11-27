@@ -21,3 +21,43 @@ fun NavController.navigateToSeasonalAnimeDetail(
         ),
     )
 }
+
+fun NavController.navigateToSeasonalAnimeDetail(
+    id: Long,
+    title: String,
+    image: String,
+    score: String,
+    members: Int,
+    releasedYear: String,
+    isAiring: Boolean,
+    genres: String,
+    synopsis: String,
+    trailerVideoId: String,
+) {
+    navigate(
+        route = SeasonalDestinations.AnimeDetail(
+            id = id,
+            title = title,
+            image = image,
+            score = score,
+            members = members,
+            releasedYear = releasedYear.toString(),
+            isAiring = isAiring,
+            genres = genres,
+            synopsis = synopsis,
+            trailerVideoId = trailerVideoId,
+        ),
+    )
+}
+
+fun NavController.navigateToArchive(
+    year: String,
+    season: String,
+) {
+    navigate(
+        route = SeasonalDestinations.Archive(
+            year = year,
+            season = season,
+        ),
+    )
+}

@@ -13,10 +13,13 @@ import androidx.navigation.toRoute
 import com.core.designsystem.LocalNavAnimatedVisibilityScope
 import com.core.model.home.AiringSeasonalAnimeModel
 import com.feature.seasonal.ui.AnimeDetailScreen
+import com.feature.seasonal.ui.ArchiveScreen
 import com.feature.seasonal.ui.SeasonalScreen
 
 fun NavGraphBuilder.seasonalNavGraph(
     onSeasonalItemClick: (model: AiringSeasonalAnimeModel) -> Unit,
+    onArchivedItemClick: (id: Long, title: String, image: String, score: String, members: Int, releasedYear: String, isAiring: Boolean, genres: String, synopsis: String, trailerVideoId: String) -> Unit,
+    onArchivedSelected: (year: String, season: String) -> Unit,
     onNavigateUp: () -> Unit,
 ) {
     navigation<SeasonalGraph>(startDestination = SeasonalDestinations.Seasonal) {
@@ -31,6 +34,7 @@ fun NavGraphBuilder.seasonalNavGraph(
             ) {
                 SeasonalScreen(
                     onSeasonalItemClick = onSeasonalItemClick,
+                    onArchivedSelected = onArchivedSelected,
                 )
             }
         }
@@ -59,6 +63,13 @@ fun NavGraphBuilder.seasonalNavGraph(
                     onNavigateUp = onNavigateUp,
                 )
             }
+        }
+
+        composable<SeasonalDestinations.Archive> {
+            ArchiveScreen(
+                onArchivedItemClick = onArchivedItemClick,
+                onNavigateUp = onNavigateUp,
+            )
         }
     }
 }

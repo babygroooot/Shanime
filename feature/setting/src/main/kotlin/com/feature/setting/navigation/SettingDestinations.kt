@@ -9,6 +9,12 @@ sealed interface SettingDestinations {
 
     @Serializable
     data object FontSize : SettingDestinations
+
+    @Serializable
+    data object TermAndCondition : SettingDestinations
+
+    @Serializable
+    data object AboutUs : SettingDestinations
 }
 
 @Serializable

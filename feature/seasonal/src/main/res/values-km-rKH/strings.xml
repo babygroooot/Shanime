@@ -13,4 +13,8 @@
     <string name="feature_seasonal_no_comment_decs">មិនទាន់មានការបញ្ចេញមតិ</string>
     <string name="feature_seasonal_error_desc">ប្រតិបត្តការមានបញ្ហា\nសូមព្យាយាមម្តងទៀត</string>
     <string name="feature_seasonal_try_again">ព្យាយាមម្តងទៀត</string>
+    <string name="feature_seasonal_archive">បណ្ណសារ</string>
+    <string name="feature_seasonal_view_archive">បង្ហាញបណ្ណសារ</string>
+    <string name="feature_seasonal_year">ឆ្នាំ</string>
+    <string name="feature_seasonal_season">រដូវកាល</string>
 </resources>

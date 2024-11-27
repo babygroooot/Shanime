@@ -1,6 +1,7 @@
 package com.feature.seasonal.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -112,6 +113,7 @@ fun AnimeBannerItem(
                             ),
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
                     )
                     .clickable(
                         interactionSource = null,
@@ -166,6 +168,7 @@ fun AnimeMiddleContentItem(
                             ),
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
                     )
                     .skipToLookaheadSize(),
             )

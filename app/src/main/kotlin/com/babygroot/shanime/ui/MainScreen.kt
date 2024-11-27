@@ -37,12 +37,17 @@ import com.feature.discover.navigation.navigateToSearchAnime
 import com.feature.home.navigation.HomeGraph
 import com.feature.home.navigation.homeNavGraph
 import com.feature.home.navigation.navigateToBannerDetail
+import com.feature.home.navigation.navigateToSearchManga
 import com.feature.home.navigation.navigateToTopAnimeDetail
 import com.feature.home.navigation.navigateToTopHitAnime
+import com.feature.home.navigation.navigateToTopHitManga
 import com.feature.home.navigation.navigateToTopMangaDetail
+import com.feature.seasonal.navigation.navigateToArchive
 import com.feature.seasonal.navigation.navigateToSeasonalAnimeDetail
 import com.feature.seasonal.navigation.seasonalNavGraph
+import com.feature.setting.navigation.navigateToAboutUs
 import com.feature.setting.navigation.navigateToFontSize
+import com.feature.setting.navigation.navigateToTermAndCondition
 import com.feature.setting.navigation.settingNavGraph
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalComposeUiApi::class)
@@ -114,7 +119,9 @@ fun MainScreen(
                         onTopMangaItemClick = navController::navigateToTopMangaDetail,
                         onViewDetailClick = navController::navigateToBannerDetail,
                         onViewAllTopAnimeClick = navController::navigateToTopHitAnime,
+                        onViewAllTopMangaClick = navController::navigateToTopHitManga,
                         onSearchAnimeClick = navController::navigateToSearchAnime,
+                        onSearchMangaClick = navController::navigateToSearchManga,
                         onNavigateUp = onNavigateUp,
                     )
                     discoverNavGraph(
@@ -124,10 +131,14 @@ fun MainScreen(
                     )
                     seasonalNavGraph(
                         onSeasonalItemClick = navController::navigateToSeasonalAnimeDetail,
+                        onArchivedItemClick = navController::navigateToSeasonalAnimeDetail,
+                        onArchivedSelected = navController::navigateToArchive,
                         onNavigateUp = onNavigateUp,
                     )
                     settingNavGraph(
                         onFontSizeClick = navController::navigateToFontSize,
+                        onTermAndConditionClick = navController::navigateToTermAndCondition,
+                        onAboutUsClick = navController::navigateToAboutUs,
                         onNavigateUp = onNavigateUp,
                     )
                 }

@@ -23,10 +23,12 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -37,12 +39,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import com.core.designsystem.ShanimeTheme
 import com.core.designsystem.component.pagerTabIndicatorOffset
 import com.core.designsystem.getNavAnimatedVisibilityScope
 import com.core.designsystem.getSharedTransitionScope
 import com.core.model.home.AiringSeasonalAnimeModel
+import com.core.model.seasonal.SeasonModel
 import com.feature.seasonal.R
 import com.feature.seasonal.SeasonalTabs
 import com.feature.seasonal.viewmodel.SeasonalViewModel
@@ -54,11 +58,20 @@ import kotlinx.coroutines.launch
 fun SeasonalScreen(
     airingAnime: Flow<PagingData<AiringSeasonalAnimeModel>>,
     upcomingAnime: Flow<PagingData<AiringSeasonalAnimeModel>>,
+    seasons: List<SeasonModel>,
     onSeasonalItemClick: (model: AiringSeasonalAnimeModel) -> Unit,
+    onArchivedSelected: (year: String, season: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val sharedTransitionScope = getSharedTransitionScope()
     val animatedVisibilityScope = getNavAnimatedVisibilityScope()
+    var showArchiveBottomSheet by remember {
+        mutableStateOf(false)
+    }
+    val scope = rememberCoroutineScope()
+    val archiveSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
     with(sharedTransitionScope) {
         with(animatedVisibilityScope) {
             Scaffold(
@@ -76,6 +89,7 @@ fun SeasonalScreen(
                         actions = {
                             IconButton(
                                 onClick = {
+                                    showArchiveBottomSheet = true
                                 },
                             ) {
                                 Icon(
@@ -105,7 +119,6 @@ fun SeasonalScreen(
                     mutableIntStateOf(0)
                 }
                 val pagerState = rememberPagerState { seasonalTabs.size }
-                val scope = rememberCoroutineScope()
                 Column(
                     modifier = Modifier
                         .padding(innerPadding),
@@ -179,6 +192,31 @@ fun SeasonalScreen(
                     }
                 }
             }
+            if (showArchiveBottomSheet) {
+                ArchiveBottomSheet(
+                    sheetState = archiveSheetState,
+                    seasons = seasons,
+                    onArchivedSelected = { year, season ->
+                        scope.launch {
+                            archiveSheetState.hide()
+                        }.invokeOnCompletion {
+                            if (archiveSheetState.isVisible.not()) {
+                                showArchiveBottomSheet = false
+                                onArchivedSelected(year, season)
+                            }
+                        }
+                    },
+                    onDismissRequest = {
+                        scope.launch {
+                            archiveSheetState.hide()
+                        }.invokeOnCompletion {
+                            if (archiveSheetState.isVisible.not()) {
+                                showArchiveBottomSheet = false
+                            }
+                        }
+                    },
+                )
+            }
         }
     }
 }
@@ -186,13 +224,17 @@ fun SeasonalScreen(
 @Composable
 fun SeasonalScreen(
     onSeasonalItemClick: (model: AiringSeasonalAnimeModel) -> Unit,
+    onArchivedSelected: (year: String, season: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SeasonalViewModel = hiltViewModel(),
 ) {
+    val seasons by viewModel.seasons.collectAsStateWithLifecycle()
     SeasonalScreen(
         airingAnime = viewModel.airingAnime,
         upcomingAnime = viewModel.upcomingAnime,
+        seasons = seasons,
         onSeasonalItemClick = onSeasonalItemClick,
+        onArchivedSelected = onArchivedSelected,
         modifier = modifier,
     )
 }

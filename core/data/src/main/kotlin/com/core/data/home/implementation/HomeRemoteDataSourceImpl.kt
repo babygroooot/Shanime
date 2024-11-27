@@ -99,4 +99,18 @@ internal class HomeRemoteDataSourceImpl @Inject constructor(
             isSpoiler = isSpoiler,
         )
     }
+
+    override suspend fun searchManga(
+        searchValue: String,
+        page: Int,
+        limit: Int,
+        unapproved: Boolean,
+    ): NetworkResult<TopMangaResponseDTO, ErrorDTO> = withContext(ioDispatcher) {
+        service.searchManga(
+            searchValue = searchValue,
+            page = page,
+            limit = limit,
+            unapproved = unapproved,
+        )
+    }
 }

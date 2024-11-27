@@ -46,4 +46,11 @@ interface HomeRemoteDataSource {
         isPreliminary: Boolean,
         isSpoiler: Boolean,
     ): NetworkResult<UserCommentResponseDTO, ErrorDTO>
+
+    suspend fun searchManga(
+        searchValue: String,
+        page: Int,
+        limit: Int,
+        unapproved: Boolean,
+    ): NetworkResult<TopMangaResponseDTO, ErrorDTO>
 }

@@ -19,16 +19,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import coil3.imageLoader
+import coil3.request.crossfade
+import com.core.designsystem.blendMode
 import com.core.designsystem.component.dialog.EdgeToEdgeDialog
 import com.core.designsystem.component.flick.FlickToDismiss
 import com.core.designsystem.component.flick.FlickToDismissState
 import com.core.designsystem.component.flick.rememberFlickToDismissState
 import kotlinx.coroutines.delay
 import me.saket.telephoto.zoomable.ZoomSpec
-import me.saket.telephoto.zoomable.coil.ZoomableAsyncImage
+import me.saket.telephoto.zoomable.coil3.ZoomableAsyncImage
 import me.saket.telephoto.zoomable.rememberZoomableImageState
 import me.saket.telephoto.zoomable.rememberZoomableState
 
@@ -40,7 +45,7 @@ fun ImageViewer(
     if (state.imageIsShown) {
         EdgeToEdgeDialog(
             onDismissRequest = {
-                state.hideImage()
+                state.closeImage()
             },
             properties = DialogProperties(
                 usePlatformDefaultWidth = false,
@@ -89,7 +94,15 @@ fun ImageViewer(
                     modifier = modifier
                         .fillMaxSize(),
                 ) {
+                    val context = LocalContext.current
+                    val imageLoader = remember {
+                        context.imageLoader.newBuilder()
+                            .placeholder(image = null)
+                            .crossfade(enable = true)
+                            .build()
+                    }
                     ZoomableAsyncImage(
+                        imageLoader = imageLoader,
                         state = imageState,
                         model = state.image,
                         contentDescription = null,
@@ -103,7 +116,7 @@ fun ImageViewer(
                 }
                 IconButton(
                     onClick = {
-                        state.hideImage()
+                        state.closeImage()
                     },
                     modifier = Modifier
                         .statusBarsPadding()
@@ -114,7 +127,8 @@ fun ImageViewer(
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier
-                            .size(size = 30.dp),
+                            .size(size = 30.dp)
+                            .blendMode(blendMode = BlendMode.Difference),
                     )
                 }
             }

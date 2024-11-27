@@ -34,7 +34,6 @@ import com.core.model.main.UserSettingModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -53,7 +52,9 @@ class MainActivity : AppCompatActivity() {
         var userSetting by mutableStateOf<UserSettingModel?>(null)
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userSetting.onEach { userSetting = it }.collect()
+                viewModel.userSetting.collect { userSettingModel ->
+                    userSetting = userSettingModel
+                }
             }
         }
         splashScreen.setKeepOnScreenCondition {

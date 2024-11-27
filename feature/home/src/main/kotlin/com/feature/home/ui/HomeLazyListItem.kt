@@ -335,7 +335,6 @@ fun TopHitAnime(
         ) {
             itemsIndexed(
                 items = topHitAnime,
-                key = { _, item -> item.malId },
             ) { index, item ->
                 HomeItem(
                     id = item.malId,
@@ -371,13 +370,12 @@ fun TopHitManga(
         ) {
             itemsIndexed(
                 items = topHitManga,
-                key = { _, item -> item.malId },
             ) { index, item ->
                 HomeItem(
                     id = item.malId,
                     itemOrder = index.inc(),
                     image = item.image,
-                    score = item.score.toString(),
+                    score = item.score,
                     onClick = { onClick(item) },
                     modifier = Modifier
                         .animateItem()

@@ -16,4 +16,6 @@
     <string name="feature_home_no_comment_decs">មិនទាន់មានការបញ្ចេញមតិ</string>
     <string name="feature_home_error_desc">ប្រតិបត្តការមានបញ្ហា\nសូមព្យាយាមម្តងទៀត</string>
     <string name="feature_home_try_again">ព្យាយាមម្តងទៀត</string>
+    <string name="feature_home_search">ស្វែងរក</string>
+    <string name="feature_home_search_decs">វាយបញ្ចូលពាក្យគន្លឹះដើម្បីស្វែងរក</string>
 </resources>

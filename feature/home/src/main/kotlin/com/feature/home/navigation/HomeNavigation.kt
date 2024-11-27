@@ -67,3 +67,15 @@ fun NavController.navigateToTopHitAnime() {
         route = HomeDestinations.TopHitAnime,
     )
 }
+
+fun NavController.navigateToTopHitManga() {
+    navigate(
+        route = HomeDestinations.TopHitManga,
+    )
+}
+
+fun NavController.navigateToSearchManga() {
+    navigate(
+        route = HomeDestinations.SearchManga,
+    )
+}

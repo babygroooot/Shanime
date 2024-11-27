@@ -1,7 +1,10 @@
 package com.core.data.seasonal
 
+import com.core.data.seasonal.dto.SeasonResponseDTO
 import com.core.data.seasonal.pagingsource.AiringAnimePagingSource
+import com.core.data.seasonal.pagingsource.ArchivedAnimePagingSource
 import com.core.data.seasonal.pagingsource.UpcomingAnimePagingSource
+import kotlinx.coroutines.flow.Flow
 
 interface SeasonalRepository {
 
@@ -18,4 +21,11 @@ interface SeasonalRepository {
         unapproved: Boolean,
         continuing: Boolean,
     ): UpcomingAnimePagingSource
+
+    fun getSeasons(): Flow<Result<SeasonResponseDTO>>
+
+    fun getArchivedAnimePagingSource(
+        year: String,
+        season: String,
+    ): ArchivedAnimePagingSource
 }

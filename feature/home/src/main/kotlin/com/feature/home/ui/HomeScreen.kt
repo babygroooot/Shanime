@@ -37,6 +37,7 @@ fun HomeScreen(
     onTopAnimeItemClick: (topAnimeModel: TopAnimeModel) -> Unit,
     onTopMangaItemClick: (topManga: TopMangaModel) -> Unit,
     onViewAllTopAnimeClick: () -> Unit,
+    onViewAllTopMangaClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ReportDrawnWhen { uiState is HomeUiState.Success }
@@ -84,7 +85,7 @@ fun HomeScreen(
                         item {
                             SectionHeader(
                                 title = stringResource(id = R.string.feature_home_top_hit_manga),
-                                onSeeAllClick = {},
+                                onSeeAllClick = onViewAllTopMangaClick,
                             )
                         }
                         item {
@@ -114,6 +115,7 @@ fun HomeScreen(
     onTopAnimeItemClick: (topAnimeModel: TopAnimeModel) -> Unit,
     onTopMangaItemClick: (topManga: TopMangaModel) -> Unit,
     onViewAllTopAnimeClick: () -> Unit,
+    onViewAllTopMangaClick: () -> Unit,
     viewModel: HomeViewModel,
     modifier: Modifier = Modifier,
 ) {
@@ -125,6 +127,7 @@ fun HomeScreen(
         onTopAnimeItemClick = onTopAnimeItemClick,
         onTopMangaItemClick = onTopMangaItemClick,
         onViewAllTopAnimeClick = onViewAllTopAnimeClick,
+        onViewAllTopMangaClick = onViewAllTopMangaClick,
         modifier = modifier,
     )
 }

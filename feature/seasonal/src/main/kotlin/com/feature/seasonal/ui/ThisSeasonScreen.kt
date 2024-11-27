@@ -179,6 +179,7 @@ fun SeasonalItem(
                                 ),
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
                             clipInOverlayDuringTransition = OverlayClip(
                                 clipShape = RoundedCornerShape(size = 12.dp),
                             ),
@@ -267,7 +268,7 @@ fun SeasonalItem(
                             ),
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
-                        resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.FillHeight),
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
                     )
                     .skipToLookaheadSize(),
             )

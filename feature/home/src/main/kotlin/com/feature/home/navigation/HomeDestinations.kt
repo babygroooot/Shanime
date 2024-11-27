@@ -29,7 +29,7 @@ sealed interface HomeDestinations {
         val image: String,
         val title: String,
         val synopsis: String,
-        val score: Float,
+        val score: String,
         val genres: String,
         val authorName: String,
         val isOnGoing: Boolean,
@@ -39,6 +39,12 @@ sealed interface HomeDestinations {
 
     @Serializable
     data object TopHitAnime : HomeDestinations
+
+    @Serializable
+    data object TopHitManga : HomeDestinations
+
+    @Serializable
+    data object SearchManga : HomeDestinations
 }
 
 @Serializable

@@ -7,3 +7,15 @@ fun NavController.navigateToFontSize() {
         route = SettingDestinations.FontSize,
     )
 }
+
+fun NavController.navigateToTermAndCondition() {
+    navigate(
+        route = SettingDestinations.TermAndCondition,
+    )
+}
+
+fun NavController.navigateToAboutUs() {
+    navigate(
+        route = SettingDestinations.AboutUs,
+    )
+}

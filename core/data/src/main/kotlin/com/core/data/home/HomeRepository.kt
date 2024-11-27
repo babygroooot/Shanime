@@ -4,6 +4,8 @@ import com.core.data.home.dto.AiringSeasonalAnimeResponseDTO
 import com.core.data.home.dto.TopAnimeResponseDTO
 import com.core.data.home.dto.TopMangaResponseDTO
 import com.core.data.home.dto.UserCommentResponseDTO
+import com.core.data.home.pagingsource.SearchMangaPagingSource
+import com.core.data.home.pagingsource.TopMangaPagingSource
 import kotlinx.coroutines.flow.Flow
 
 interface HomeRepository {
@@ -25,4 +27,8 @@ interface HomeRepository {
         isPreliminary: Boolean,
         isSpoiler: Boolean,
     ): Flow<Result<UserCommentResponseDTO>>
+
+    fun getTopManga(): TopMangaPagingSource
+
+    fun searchManga(searchValue: String): SearchMangaPagingSource
 }

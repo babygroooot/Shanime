@@ -9,6 +9,8 @@ import com.core.data.home.dto.AiringSeasonalAnimeResponseDTO
 import com.core.data.home.dto.TopAnimeResponseDTO
 import com.core.data.home.dto.TopMangaResponseDTO
 import com.core.data.home.dto.UserCommentResponseDTO
+import com.core.data.home.pagingsource.SearchMangaPagingSource
+import com.core.data.home.pagingsource.TopMangaPagingSource
 import com.core.network.util.onError
 import com.core.network.util.onException
 import com.core.network.util.onSuccess
@@ -123,4 +125,15 @@ internal class HomeRepositoryImpl @Inject constructor(
             emit(Result.failure(e))
         }
     }.flowOn(context = ioDispatcher)
+
+    override fun getTopManga(): TopMangaPagingSource = TopMangaPagingSource(
+        getTopManga = homeRemoteDataSource::getTopManga,
+    )
+
+    override fun searchManga(
+        searchValue: String,
+    ): SearchMangaPagingSource = SearchMangaPagingSource(
+        searchManga = homeRemoteDataSource::searchManga,
+        search = searchValue,
+    )
 }

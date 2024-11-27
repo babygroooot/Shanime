@@ -18,14 +18,18 @@ import com.core.model.home.TopMangaModel
 import com.feature.home.ui.AnimeDetailScreen
 import com.feature.home.ui.HomeScreen
 import com.feature.home.ui.MangaDetailScreen
+import com.feature.home.ui.SearchMangaScreen
 import com.feature.home.ui.TopHitAnimeScreen
+import com.feature.home.ui.TopHitMangaScreen
 
 fun NavGraphBuilder.homeNavGraph(
     onViewDetailClick: (airingAnimeModel: AiringSeasonalAnimeModel) -> Unit,
     onTopAnimeItemClick: (topAnimeModel: TopAnimeModel) -> Unit,
     onTopMangaItemClick: (topManga: TopMangaModel) -> Unit,
     onViewAllTopAnimeClick: () -> Unit,
+    onViewAllTopMangaClick: () -> Unit,
     onSearchAnimeClick: () -> Unit,
+    onSearchMangaClick: () -> Unit,
     onNavigateUp: () -> Unit,
 ) {
     navigation<HomeGraph>(startDestination = HomeDestinations.Home) {
@@ -43,6 +47,7 @@ fun NavGraphBuilder.homeNavGraph(
                     onTopAnimeItemClick = onTopAnimeItemClick,
                     onTopMangaItemClick = onTopMangaItemClick,
                     onViewAllTopAnimeClick = onViewAllTopAnimeClick,
+                    onViewAllTopMangaClick = onViewAllTopMangaClick,
                     viewModel = hiltViewModel(),
                 )
             }
@@ -106,6 +111,30 @@ fun NavGraphBuilder.homeNavGraph(
                 onSearchAnimeClick = onSearchAnimeClick,
                 onNavigateUp = onNavigateUp,
             )
+        }
+
+        composable<HomeDestinations.TopHitManga> {
+            TopHitMangaScreen(
+                onTopMangaItemClick = onTopMangaItemClick,
+                onSearchMangaClick = onSearchMangaClick,
+                onNavigateUp = onNavigateUp,
+            )
+        }
+
+        composable<HomeDestinations.SearchManga>(
+            enterTransition = { fadeIn(tween(easing = EaseIn)) },
+            exitTransition = { fadeOut(tween(easing = EaseOut)) },
+            popEnterTransition = { fadeIn(tween(easing = EaseIn)) },
+            popExitTransition = { fadeOut(tween(easing = EaseOut)) },
+        ) {
+            CompositionLocalProvider(
+                LocalNavAnimatedVisibilityScope provides this,
+            ) {
+                SearchMangaScreen(
+                    onTopMangaItemClick = onTopMangaItemClick,
+                    onNavigateUp = onNavigateUp,
+                )
+            }
         }
     }
 }
