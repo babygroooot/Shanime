@@ -57,8 +57,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        splashScreen.setKeepOnScreenCondition {
-            userSetting == null
+        // A guard condition to avoid a bug where the app stuck on
+        // splash screen for the initial launch out of fresh install
+        if (!languageHasNotBeenSet) {
+            splashScreen.setKeepOnScreenCondition {
+                userSetting == null
+            }
         }
         setContent {
             val fontSizeConfig by remember {

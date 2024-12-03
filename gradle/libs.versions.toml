@@ -36,7 +36,7 @@ protobufPlugin = "0.9.4"
 androidxComposeBom = "2024.11.00"
 androidxHiltNavigationCompose = "1.2.0"
 #Spotless
-spotlessVersion = "7.0.0.BETA1"
+spotlessVersion = "7.0.0.BETA4"
 #Coil
 coil = "3.0.3"
 #Paging
