@@ -1,5 +1,6 @@
 package com.core.domain.home
 
+import android.R.attr.data
 import com.core.common.formatDate
 import com.core.data.home.HomeRepository
 import com.core.model.home.ImageType
@@ -20,23 +21,18 @@ class GetAnimeUserCommentPreviewUseCase @Inject constructor(
         isPreliminary = isPreliminary,
         isSpoiler = isSpoiler,
     ).map { result ->
-        if (result.isSuccess) {
-            val data = result.getOrThrow()
-            Result.success(
-                data.data.map { userCommentDTO ->
-                    UserCommentModel(
-                        id = userCommentDTO.malId,
-                        userProfile = userCommentDTO.user.images[ImageType.JPG.value]?.imageURL.orEmpty(),
-                        username = userCommentDTO.user.username,
-                        comment = userCommentDTO.review,
-                        score = userCommentDTO.score,
-                        reactionCount = userCommentDTO.reactions.overall,
-                        date = userCommentDTO.date.formatDate(outputPattern = "dd MMM, yyyy"),
-                    )
-                },
-            )
-        } else {
-            Result.failure(exception = result.exceptionOrNull() ?: Exception())
+        result.map { response ->
+            response.data.map { userCommentDTO ->
+                UserCommentModel(
+                    id = userCommentDTO.malId,
+                    userProfile = userCommentDTO.user.images[ImageType.JPG.value]?.imageURL.orEmpty(),
+                    username = userCommentDTO.user.username,
+                    comment = userCommentDTO.review,
+                    score = userCommentDTO.score,
+                    reactionCount = userCommentDTO.reactions.overall,
+                    date = userCommentDTO.date.formatDate(outputPattern = "dd MMM, yyyy"),
+                )
+            }
         }
     }
 }

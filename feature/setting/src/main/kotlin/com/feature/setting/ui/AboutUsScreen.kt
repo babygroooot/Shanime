@@ -53,8 +53,6 @@ fun AboutUsScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = onNavigateUp,
-                        modifier = Modifier
-                            .testTag(tag = "seasonal_navigate_back_button"),
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBackIosNew,

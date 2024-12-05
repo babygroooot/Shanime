@@ -7,20 +7,16 @@ import com.core.model.home.ImageType
 import com.core.model.home.TopMangaModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetTopTenPublishingMangaUseCase @Inject constructor(
     private val homeRepository: HomeRepository,
 ) {
 
-    operator fun invoke(): Flow<Result<List<TopMangaModel>>> = flow {
-        homeRepository.getTopTenPublishingManga().collect { networkResult ->
-            networkResult.onSuccess { response ->
-                emit(Result.success(response.data.map { it.toModel() }))
-            }
-            networkResult.onFailure { throwable ->
-                emit(Result.failure(exception = throwable))
-            }
+    operator fun invoke(): Flow<Result<List<TopMangaModel>>> = homeRepository.getTopTenPublishingManga().map { result ->
+        result.map { response ->
+            response.data.map { it.toModel() }
         }
     }
 
